@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const http = require('http');
 var server = http.createServer(app);
 const cookieParser = require('cookie-parser');
-const socketService = require('./services/socket');
-const cookie = require('cookie');
-const config = require('./utils/config');
+const config = require('./config/config');
+const authRoutes = require('./routes/authRoutes');
+const validateServices = require('./utils/validate');
 
 app.use(
   cors({
@@ -16,15 +16,14 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
 
-app.set("views", __dirname);
-
-app.use('/', roomRoutes);
+app.use('/', validateServices.validateIncomingRequest, authRoutes);
 
 module.exports = {
   server
