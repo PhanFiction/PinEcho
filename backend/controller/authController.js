@@ -1,6 +1,16 @@
+const { validationResult } = require('express-validator');
 
 exports.login = async (req, res) => {
-  const { username, name, email, password } = req.body;
-  if(username === null || username.length < 5) return res.send({error: "username needs to have 5 letters"});
-  if((name === null || name.length < 3)) return res.send({error: "name needs to be more than 3 letters"});
+  const errors = validationResult(req);
+  const { username, password } = req.body;
+  console.log(username, password);
+  return res.status(201).json({success: 'login'});
+};
+
+exports.signUp = async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
+  const { username, name, password, email } = req.body;
+  console.log(username, name, email, password);
+  return res.status(201).json({success: 'signup'});
 };

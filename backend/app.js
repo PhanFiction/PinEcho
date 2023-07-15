@@ -2,12 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const http = require('http');
-var server = http.createServer(app);
 const cookieParser = require('cookie-parser');
 const config = require('./config/config');
 const authRoutes = require('./routes/authRoutes');
-const validateServices = require('./utils/validate');
 
 app.use(
   cors({
@@ -18,13 +15,15 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(express.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+app.use(express.json());
 
-app.use('/', validateServices.validateIncomingRequest, authRoutes);
+app.use('/', authRoutes);
 
-module.exports = {
-  server
-}
+app.get('/', (req, res) => {
+  res.send('<h1>hello Wordl</h1>');
+});
+
+module.exports = app;
