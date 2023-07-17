@@ -3,8 +3,8 @@ const app = require('../app');
 
 const api = supertest(app);
 
-describe('test login', () => {
-  test('login', async () => {
+describe('test signup', () => {
+  test('signup', async () => {
     const credentials = {
       username: 'tester',
       name: 'test',
@@ -18,7 +18,7 @@ describe('test login', () => {
       .expect('Content-Type', /application\/json/)
   });
 
-  test('login failed', async () => {
+  test('signup failed', async () => {
     const credentials = {
       username: 'tester',
       name: '',
@@ -26,9 +26,38 @@ describe('test login', () => {
       email: ''
     }
     await api
-    .post('/signup')
-    .send(credentials)
-    .expect(422)
-    .expect('Content-Type', /application\/json/)
-  })
-})
+      .post('/signup')
+      .send(credentials)
+      .expect(422)
+      .expect('Content-Type', /application\/json/)
+  });
+});
+
+describe('test login', () => {
+  const credentials = {
+    username: 'tester',
+    name: 'test',
+    password: 'test',
+  };
+
+  test('login success', async () => {
+    await api
+      .post('/login')
+      .send(credentials)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('test login fail', async () => {
+    const falseCredentials = {
+      username: 'tes23r',
+      password: '4123',
+    }
+    await api
+      .post('/login')
+      .send(falseCredentials)
+      .expect(422)
+      .expect('Content-Type', /application\/json/)
+  });
+});
+
