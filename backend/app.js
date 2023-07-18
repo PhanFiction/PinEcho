@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('./config/config');
 const authRoutes = require('./routes/authRoutes');
+const mongoose = require('mongoose');
 
 app.use(
   cors({
@@ -18,6 +19,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+
+mongoose.set('strictQuery',false);
+mongoose.connect(config.databaseURL)
+  .then(() => console.log('Connected to database'));
+  
 app.use(express.json());
 
 app.use('/', authRoutes);
