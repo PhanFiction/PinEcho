@@ -1,8 +1,15 @@
 const supertest = require('supertest');
 const app = require('../app');
 const mongoose = require('mongoose');
+const config = require('../config/config');
+const User = require('../models/User');
 
 const api = supertest(app);
+
+beforeAll(async () => {
+  mongoose.connect(config.databaseURL);
+  await User.deleteMany({});
+});
 
 describe('test signup', () => {
   test('signup', async () => {
@@ -62,3 +69,6 @@ describe('test login', () => {
   });
 });
 
+afterAll(() => {
+  mongoose.disconnect();
+});
