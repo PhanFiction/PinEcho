@@ -3,25 +3,23 @@ const app = require('../app');
 const mongoose = require('mongoose');
 const config = require('../config/config');
 const User = require('../models/User');
-const fakeService = require('../utils/insertFakseUsers');
+const bcrypt = require('bcrypt');
 
 const api = supertest(app);
 
 beforeAll(async () => {
   await mongoose.connect(config.databaseURL);
-  await User.deleteMany();
-
-  await User.insertMany(fakeService.fakeUsers);
+  await User.deleteMany({});
 });
 
 describe('test signup', () => {
-  test('signup success', async () => {
+  test('signup', async () => {
     const credentials = {
-      email: 'test@gmail.com',
       username: 'tester',
-      name: 'tester',
+      name: 'test',
       password: '12345',
-    };
+      email: 'test@gmail.com'
+    }
     await api
       .post('/signup')
       .send(credentials)
@@ -30,7 +28,7 @@ describe('test signup', () => {
   });
 
   test('signup failed', async () => {
-    const falseCredentials = {
+    const credentials = {
       username: 'tester',
       name: '',
       password: '12345',
@@ -38,23 +36,39 @@ describe('test signup', () => {
     }
     await api
       .post('/signup')
-      .send(falseCredentials)
+      .send(credentials)
       .expect(401)
       .expect('Content-Type', /application\/json/)
   });
 });
 
 describe('test login', () => {
-  const credentials = {
-    username: 'tester2',
-    password: '12345',
-  };
+  beforeEach(async () => {
+    const saltRounds = 10;
+    const password = '12345';
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const newUser = {
+      username: 'tester',
+      name: 'test',
+      email: 'tester@gmail.com',
+      passwordHash,
+    };
+
+    await User.insertMany(newUser);
+  });
 
   test('login success', async () => {
+    const credentials = {
+      username: 'tester',
+      name: 'test',
+      password: '12345',
+      email: 'test@gmail.com'
+    };
     await api
       .post('/login')
       .send(credentials)
-      .expect(201)
+      .expect(200)
       .expect('Content-Type', /application\/json/)
   });
 
@@ -68,9 +82,6 @@ describe('test login', () => {
       .send(falseCredentials)
       .expect(401)
       .expect('Content-Type', /application\/json/)
-
-    const userData = await api.get('/users');
-    console.log('data ', userData.data);
   });
 });
 
