@@ -3,22 +3,25 @@ const app = require('../app');
 const mongoose = require('mongoose');
 const config = require('../config/config');
 const User = require('../models/User');
+const fakeService = require('../utils/insertFakseUsers');
 
 const api = supertest(app);
 
 beforeAll(async () => {
-  mongoose.connect(config.databaseURL);
-  await User.deleteMany({});
+  await mongoose.connect(config.databaseURL);
+  await User.deleteMany();
+
+  await User.insertMany(fakeService.fakeUsers);
 });
 
 describe('test signup', () => {
-  test('signup', async () => {
+  test('signup success', async () => {
     const credentials = {
+      email: 'test@gmail.com',
       username: 'tester',
-      name: 'test',
+      name: 'tester',
       password: '12345',
-      email: 'test@gmail.com'
-    }
+    };
     await api
       .post('/signup')
       .send(credentials)
@@ -27,7 +30,7 @@ describe('test signup', () => {
   });
 
   test('signup failed', async () => {
-    const credentials = {
+    const falseCredentials = {
       username: 'tester',
       name: '',
       password: '12345',
@@ -35,17 +38,16 @@ describe('test signup', () => {
     }
     await api
       .post('/signup')
-      .send(credentials)
-      .expect(422)
+      .send(falseCredentials)
+      .expect(401)
       .expect('Content-Type', /application\/json/)
   });
 });
 
 describe('test login', () => {
   const credentials = {
-    username: 'tester',
-    name: 'test',
-    password: 'test',
+    username: 'tester2',
+    password: '12345',
   };
 
   test('login success', async () => {
@@ -64,11 +66,14 @@ describe('test login', () => {
     await api
       .post('/login')
       .send(falseCredentials)
-      .expect(422)
+      .expect(401)
       .expect('Content-Type', /application\/json/)
+
+    const userData = await api.get('/users');
+    console.log('data ', userData.data);
   });
 });
 
-afterAll(() => {
-  mongoose.disconnect();
+afterAll(async () => {
+  await mongoose.disconnect();
 });
