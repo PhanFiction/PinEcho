@@ -19,7 +19,25 @@ const userSchema = new mongoose.Schema({
     type: String,
     minLength: 4,
     required: true
-  }
+  }, 
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pin",
+    }
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comments",
+    }
+  ],
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "likes",
+    }
+  ]
 });
 
 const User = mongoose.model('User', userSchema);

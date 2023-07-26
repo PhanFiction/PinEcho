@@ -13,7 +13,7 @@ beforeAll(async () => {
 });
 
 describe('test signup', () => {
-  test('signup', async () => {
+  test('signup success', async () => {
     const credentials = {
       username: 'tester',
       name: 'test',
@@ -27,13 +27,55 @@ describe('test signup', () => {
       .expect('Content-Type', /application\/json/)
   });
 
-  test('signup failed', async () => {
+  test('signup failed missing username', async () => {
+    const credentials = {
+      username: '',
+      name: 'tester',
+      password: '12345',
+      email: 'tester@gmail.com'
+    };
+    await api
+      .post('/signup')
+      .send(credentials)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('sign up failed missing name', async () => {
     const credentials = {
       username: 'tester',
       name: '',
       password: '12345',
-      email: ''
+      email: 'tester@gmail.com'
     }
+    await api
+      .post('/signup')
+      .send(credentials)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('signup failed missing password', async () => {
+    const credentials = {
+      username: 'tester',
+      name: 'tester',
+      password: '',
+      email: 'tester@gmail.com'
+    };
+    await api
+      .post('/signup')
+      .send(credentials)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('signup failed missing email', async () => {
+    const credentials = {
+      username: 'tester',
+      name: 'tester',
+      password: '12345',
+      email: ''
+    };
     await api
       .post('/signup')
       .send(credentials)

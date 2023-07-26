@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('./config/config');
 const authRoutes = require('./routes/authRoutes');
+const pinRoutes = require('./routes/pinRoutes');
 const mongoose = require('mongoose');
 
 app.use(
@@ -27,9 +28,6 @@ mongoose.connect(config.databaseURL)
 app.use(express.json());
 
 app.use('/', authRoutes);
-
-app.get('/', (req, res) => {
-  res.send('<h1>hello Wordl</h1>');
-});
+app.use('/pin', pinRoutes);
 
 module.exports = app;
