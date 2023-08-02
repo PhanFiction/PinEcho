@@ -1,12 +1,12 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
 exports.login = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map(error => error.msg);
-    console.log('errorMessages ', errorMessages, 'body ', req.body);
     return res.status(401).json({
         errors: errorMessages
     });
@@ -14,7 +14,6 @@ exports.login = async (req, res) => {
 
   const { username, password } = req.body;
   const user = await User.findOne({username});
-  console.log(user);
   // compare password from post and db
   const passwordCorrect = (user) === null ? false : await bcrypt.compare(password, user.passwordHash); 
 

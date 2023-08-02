@@ -3,15 +3,13 @@ const app = require('../app');
 const mongoose = require('mongoose');
 const config = require('../config/config');
 const User = require('../models/User');
-const fakeService = require('../utils/insertFakseUsers');
+const fakeService = require('../utils/testHelper');
 
 const api = supertest(app);
 
 beforeAll(async () => {
   await mongoose.connect(config.databaseURL);
   await User.deleteMany();
-
-  await User.insertMany(fakeService.fakeUsers);
 });
 
 describe('test signup', () => {
@@ -45,6 +43,10 @@ describe('test signup', () => {
 });
 
 describe('test login', () => {
+  beforeEach(async () => {
+    await User.insertMany(fakeService.fakeUsers);
+  });
+
   const credentials = {
     username: 'tester2',
     password: '12345',
