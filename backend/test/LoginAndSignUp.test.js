@@ -3,23 +3,23 @@ const app = require('../app');
 const mongoose = require('mongoose');
 const config = require('../config/config');
 const User = require('../models/User');
-const fakeService = require('../utils/testHelper');
+const bcrypt = require('bcrypt');
 
 const api = supertest(app);
 
 beforeAll(async () => {
   await mongoose.connect(config.databaseURL);
-  await User.deleteMany();
+  await User.deleteMany({});
 });
 
 describe('test signup', () => {
   test('signup success', async () => {
     const credentials = {
-      email: 'test@gmail.com',
       username: 'tester',
-      name: 'tester',
+      name: 'test',
       password: '12345',
-    };
+      email: 'test@gmail.com'
+    }
     await api
       .post('/signup')
       .send(credentials)
@@ -27,16 +27,58 @@ describe('test signup', () => {
       .expect('Content-Type', /application\/json/)
   });
 
-  test('signup failed', async () => {
-    const falseCredentials = {
+  test('signup failed missing username', async () => {
+    const credentials = {
+      username: '',
+      name: 'tester',
+      password: '12345',
+      email: 'tester@gmail.com'
+    };
+    await api
+      .post('/signup')
+      .send(credentials)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('sign up failed missing name', async () => {
+    const credentials = {
       username: 'tester',
       name: '',
       password: '12345',
-      email: ''
+      email: 'tester@gmail.com'
     }
     await api
       .post('/signup')
-      .send(falseCredentials)
+      .send(credentials)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('signup failed missing password', async () => {
+    const credentials = {
+      username: 'tester',
+      name: 'tester',
+      password: '',
+      email: 'tester@gmail.com'
+    };
+    await api
+      .post('/signup')
+      .send(credentials)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  });
+
+  test('signup failed missing email', async () => {
+    const credentials = {
+      username: 'tester',
+      name: 'tester',
+      password: '12345',
+      email: ''
+    };
+    await api
+      .post('/signup')
+      .send(credentials)
       .expect(401)
       .expect('Content-Type', /application\/json/)
   });
@@ -53,10 +95,16 @@ describe('test login', () => {
   };
 
   test('login success', async () => {
+    const credentials = {
+      username: 'tester',
+      name: 'test',
+      password: '12345',
+      email: 'test@gmail.com'
+    };
     await api
       .post('/login')
       .send(credentials)
-      .expect(201)
+      .expect(200)
       .expect('Content-Type', /application\/json/)
   });
 
@@ -70,9 +118,6 @@ describe('test login', () => {
       .send(falseCredentials)
       .expect(401)
       .expect('Content-Type', /application\/json/)
-
-    const userData = await api.get('/users');
-    console.log('data ', userData.data);
   });
 });
 
