@@ -3,11 +3,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
+// returns all users from database
 exports.getUsers = async (req, res) => {
   const foundUsers = await User.find({}, {'Username': 1, 'passwordHash': 0, '_id': 0, 'email': 0, 'name': 1});
   res.status(201).send(foundUsers);
 };
 
+// return user from database
 exports.getUser = async (req, res) => {
   const token = req.cookie['session_id'];
   try{
@@ -20,6 +22,7 @@ exports.getUser = async (req, res) => {
   }
 };
 
+// update user information
 exports.updateUserInfo = async (req, res) => {
   const { username, email, name, password } = req.body;
 
