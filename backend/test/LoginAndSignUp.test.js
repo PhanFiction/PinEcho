@@ -86,7 +86,13 @@ describe('test signup', () => {
 
 describe('test login', () => {
   beforeEach(async () => {
-    await User.insertMany(fakeService.fakeUsers);
+    const credentials = {
+      username: 'tester',
+      name: 'test',
+      password: '12345',
+      email: 'test@gmail.com'
+    };
+    await api.post('/signup')
   });
 
   const credentials = {

@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 
-mongoose.set('strictQuery',false);
 mongoose.connect(config.databaseURL)
   .then(() => console.log('Connected to database'));
   

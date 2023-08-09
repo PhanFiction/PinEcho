@@ -11,7 +11,7 @@ exports.getUsers = async (req, res) => {
 
 // return user from database
 exports.getUser = async (req, res) => {
-  const token = req.cookie['session_id'];
+  const token = req.cookie['authToken'];
   try{
     const decoded = jwt.verify(token, config.SECRET_KEY);
     if(!decoded) return res.send({error: 'Not authorized'});

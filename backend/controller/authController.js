@@ -24,13 +24,13 @@ exports.login = async (req, res) => {
     username: user.username,
     id: user._id,
   };
-
   const oneDay = 24 * 60 * 60 * 1000;
   
   try {
     const token = jwt.sign(userForToken, process.env.SECRET);
+    
     res
-      .cookie('session_id', token, {maxAge: oneDay})
+      .cookie('authToken', token, {maxAge: oneDay}, { httpOnly: true })
       .status(200)
       .send({success: 'logged in successfully', redirectURL: '/'});
   }catch(error){
