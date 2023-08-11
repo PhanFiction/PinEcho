@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 
 exports.login = async (req, res) => {
   const errors = validationResult(req);
@@ -18,7 +19,7 @@ exports.login = async (req, res) => {
   const passwordCorrect = (user) === null ? false : await bcrypt.compare(password, user.passwordHash); 
 
   // if user not found, return error of 401 
-  if(!(user && passwordCorrect)) return res.status(401).send({error: "incorrect password"});
+  if(!(user && passwordCorrect)) return res.status(401).send({error: "incorrect information"});
 
   const userForToken = {
     username: user.username,
@@ -27,14 +28,14 @@ exports.login = async (req, res) => {
   const oneDay = 24 * 60 * 60 * 1000;
   
   try {
-    const token = jwt.sign(userForToken, process.env.SECRET);
+    const token = jwt.sign(userForToken, config.SECRET_KEY);
     
+    //.cookie('authToken', token, {maxAge: oneDay}, { httpOnly: true })
     res
-      .cookie('authToken', token, {maxAge: oneDay}, { httpOnly: true })
-      .status(200)
-      .send({success: 'logged in successfully', redirectURL: '/'});
+      .status(201)
+      .send({success: 'logged in successfully', redirectURL: '/', token});
   }catch(error){
-    res.send({error})
+    res.send({'error': error})
   }
 };
 
@@ -61,7 +62,8 @@ exports.signUp = async (req, res) => {
 
   try{
     await user.save();
-    res.status(201)
+    res
+      .status(201)
       .send({success: 'created account successfully', redirectURL: '/'});
   }catch(error){
       res.status(401).send(error);

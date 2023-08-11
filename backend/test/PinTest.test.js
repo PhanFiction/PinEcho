@@ -26,7 +26,6 @@ beforeAll(async ()=> {
     .send(credentials)
 });
 
-
 // Create Pin
 describe('Pin creation', ()=> {
   test('pin created', async ()=> {

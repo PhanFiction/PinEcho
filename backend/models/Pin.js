@@ -30,7 +30,13 @@ const pinSchema = new mongoose.Schema({
   imgPath: {
     type: String,
     required: true,
-  }
+  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    }
+  ]
 });
 
 

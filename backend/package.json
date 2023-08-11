@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit"
+    "test":"cross-env NODE_ENV=test nodemon index.js",
+    "unit_test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit"
   },
   "keywords": [],
   "author": "",

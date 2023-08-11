@@ -5,7 +5,7 @@ const config = require('../config/config');
 
 // returns all users from database
 exports.getUsers = async (req, res) => {
-  const foundUsers = await User.find({}, {'Username': 1, 'passwordHash': 0, '_id': 0, 'email': 0, 'name': 1});
+  const foundUsers = await User.find({});
   res.status(201).send(foundUsers);
 };
 
