@@ -4,18 +4,29 @@ const config = require('../config/config');
 // store to cloudinary and return path
 exports.createPin = async (req, res) => {
   const { title, description, altText, link, category } = req.body;
-  console.log('cookies ', req.cookie);
-  const newPin= new Pin({
-    title,
-    description,
-    altText,
-    link,
-    category,
-  });
+  const cookie = req.headers.cookie.split(';')[0];
+  console.log('cookies ', req.headers.cookie.splice(10, cookie.length));
   try{
-    const result = await config.cloudinary.v2.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",{ public_id: "olympic_flag" });
-    console.log(result);
-    res.sttus(200).send({success: 'pin created'});
+    // store to cloudinary
+    const result = await config.cloudinaryService.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
+      { 
+        public_id: "olympic_flag", 
+        crop: "fill",
+        width: 250, 
+        height: 250,
+      },
+    );
+
+    // create new pin
+    const newPin = new Pin({
+      title,
+      description,
+      altText,
+      link,
+      category,
+      imgPath: result.url,
+    });
+    res.status(200).send({success: 'pin created'});
   }catch(error){
     res.status(404).send({error});
   }
