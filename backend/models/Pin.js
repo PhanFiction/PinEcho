@@ -36,7 +36,8 @@ const pinSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     }
-  ]
+  ],
+  likes: [],
 });
 
 
