@@ -1,18 +1,24 @@
 const Pin = require('../models/Pin');
+const User = require('../models/User');
 const config = require('../config/config');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 // store to cloudinary and return path
 exports.createPin = async (req, res) => {
   const { title, description, altText, link, category } = req.body;
-  const cookie = req.headers.cookie.split(';')[0];
-  console.log('cookies ', req.headers.cookie.splice(10, cookie.length));
+  const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
+  const decoded = jwt.verify(cookie.toString(), config.SECRET_KEY); // decode token
+  console.log('decoded token ', decoded);
+  const foundUser = await User.findById(decoded.id);
+  if(!foundUser) return res.status(401).send({error: 'User not found'});
   try{
     // store to cloudinary
     const result = await config.cloudinaryService.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
       { 
-        public_id: "olympic_flag", 
+        public_id: "olympic_flag",
         crop: "fill",
-        width: 250, 
+        width: 250,
         height: 250,
       },
     );
@@ -21,11 +27,16 @@ exports.createPin = async (req, res) => {
     const newPin = new Pin({
       title,
       description,
+      creator: foundUser._id,
       altText,
       link,
       category,
       imgPath: result.url,
     });
+
+    const savedPin = newPin.save();
+    savedPin.
+    foundUser.posts.push(savedPin._id);
     res.status(200).send({success: 'pin created'});
   }catch(error){
     res.status(404).send({error});

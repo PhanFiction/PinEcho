@@ -39,15 +39,12 @@ describe('Pin creation', ()=> {
     const loggedUser = await api
       .post('/login')
       .send(credentials)
-
     const authToken = loggedUser.header['set-cookie'][0];
-
-    console.log('headers ', authToken);
 
     await api
       .post('/pin/create-new-pin')
       .send(newPin)
-      .set('Cookie', [authToken])
+      .set('Cookie', authToken)
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
