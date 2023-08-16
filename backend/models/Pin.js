@@ -34,10 +34,13 @@ const pinSchema = new mongoose.Schema({
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "Comments",
     }
   ],
-  likes: [],
+  likes: {
+    default: 0,
+    type: Number,
+  }
 });
 
 
