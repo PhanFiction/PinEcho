@@ -22,14 +22,16 @@ const pinSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-    default: [],
-  },
+  category: [],
   imgPath: {
-    type: String,
-    required: true,
+    path: {
+      type: String,
+      required: true
+    },
+    publicId: {
+      type: String,
+      required: true
+    }
   },
   comments: [
     {
@@ -43,15 +45,6 @@ const pinSchema = new mongoose.Schema({
   }
 });
 
-
-/**
- * @title String
- * @description String
- * @altText string
- * @link string url
- * @category array
- * @imgPath string
- */
 const Pin = mongoose.model('Pin', pinSchema);
 
 module.exports = Pin;

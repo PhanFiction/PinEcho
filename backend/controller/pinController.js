@@ -3,49 +3,48 @@ const User = require('../models/User');
 const Comment = require('../models/Comment');
 const config = require('../config/config');
 const verifyToken = require('../utils/verifyToken');
+const convertIdToString = require('../utils/idToString');
 
 // store to cloudinary and return path
 exports.createPin = async (req, res) => {
-  const { title, description, altText, link, category } = req.body;
+  const { imgURL, title, description, altText, link, category } = req.body;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
-  const decoded = verifyToken(cookie);
-  
-  console.log('decoded token ', decoded);
+  const decodedToken = verifyToken(cookie);
 
-  const foundUser = await User.findById(decoded.id);
+  const foundUser = await User.findById(decodedToken.id);
+
+  if(imgURL === "") return res.status(400).send({error: "missing image"});
   if(!foundUser) return res.status(401).send({error: 'User not found'});
+  const transformation = {
+    width: 500, 
+    height: 400,
+    crop: "scale",
+  };
 
-  try{
-    // store to cloudinary
-    const result = await config.cloudinaryService.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-      { 
-        public_id: "olympic_flag",
-        crop: "fill",
-        width: 250,
-        height: 250,
-      },
-    );
+  // store to cloudinary
+  const result = await config.cloudinaryService.uploader.upload(imgURL,transformation);
 
-    // create new pin
-    const newPin = new Pin({
-      title,
-      description,
-      creator: foundUser._id,
-      altText,
-      link,
-      category,
-      imgPath: result.url,
-      comments: [],
-      likes: 0,
-    });
+  // create new pin
+  const newPin = new Pin({
+    title,
+    description,
+    creator: foundUser._id,
+    altText,
+    link,
+    category,
+    imgPath: {
+      path: result.url,
+      publicId: result.public_id,
+    },
+    comments: [],
+    likes: 0,
+  });
 
-    const savedPin = newPin.save();
-    foundUser.posts = foundUser.posts.push(savedPin._id);
+    const savedPin = await newPin.save();
+    const pinStringId = convertIdToString(savedPin._id);
+    foundUser.posts.push(pinStringId);
     await foundUser.save();
-    res.status(200).send({success: 'pin created'});
-  }catch(error){
-    res.status(404).send({error});
-  }
+    res.status(201).send({success: 'pin created', pinId: pinStringId});
 };
 
 // returns all pins
@@ -58,23 +57,24 @@ exports.getAllPins = async (req, res) => {
 exports.getSinglePin = async (req, res) => {
   const pinId = req.params.id;
   const foundPin = await Pin.findById(pinId);
-  res.status(201).send(foundPin);
+  res.status(200).send(foundPin);
 };
 
 // update the pin
 exports.updatePin = async (req, res) => {
-  const { title, description, altText, link, category, pinId } = req.body;
-  const foundPin = await Pin.findById({pinId});
+  const { title, description, altText, link, category } = req.body;
+  const pinId = req.params.id;
+  const foundPin = await Pin.findById(pinId);
 
   if(!foundPin) return res.status(401).send({'Pin error': 'Pin not found'});
 
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
-  const decoded = verifyToken(cookie);
+  const decodedToken = verifyToken(cookie);
 
-  if(!decoded) return res.status(401).send({error: 'Not authorized'});
-  if(foundPin._id != decoded.id) return res.status(401).send({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
+  if(foundPin.creator != decodedToken.id) return res.status(401).send({error: 'Not authorized'});
 
-  try {
+  try{
     foundPin.title = title === '' ? foundPin.title : title;
     foundPin.description = description === '' ? foundPin.description : description;
     foundPin.altText = altText === '' ? foundPin.altText : altText;
@@ -82,33 +82,33 @@ exports.updatePin = async (req, res) => {
     foundPin.category = category.length < 1 ? foundPin.category : category;
 
     await foundPin.save();
-    res.status(201).send({success: 'Pin has been updated'});
+    res.status(200).send({success: 'Pin has been updated'});
   }catch(error){
     res.status(401).send({error});
   }
 };
 
 exports.deletePin = async (req, res) => {
-  const pinId = req.body;
+  const pinId = req.params.id;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
 
-  const decoded = verifyToken(cookie); // verify token
+  const decodedToken = verifyToken(cookie); // verify token
 
   const foundPin = await Pin.findById(pinId);
-  const foundUser = await User.findById(decoded.id);
+  const foundUser = await User.findById(decodedToken.id);
  
-  if(!decoded) return res.status(401).send({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
   if(!foundPin) return res.status(401).send({error: 'Pin is not available'});  
   if(!foundUser) return res.status(401).send({error: 'User not found'});
+  if(foundPin.creator != decodedToken.id) return res.status(401).send({error: 'Not authorized'});
 
-  try{
+
+    await config.cloudinaryService.uploader.destroy(foundPin.imgPath.publicId);
+
     await Pin.findByIdAndDelete(pinId);
-    foundUser.post = await foundUser.post.map(i => i.id !== pinId);
-    foundUser.save();
-    res.status(201).send({'success': 'pin deleted'});
-  }catch(error){
-    res.status(401).send({error: error})
-  }
+    foundUser.posts.map(i => i.id !== pinId);
+    await foundUser.save();
+    res.status(200).send({'success': 'pin deleted'});
 };
 
 exports.updateLike = async (req, res) => {
