@@ -5,6 +5,19 @@ const config = require('../config/config');
 const verifyToken = require('../utils/verifyToken');
 const convertIdToString = require('../utils/idToString');
 
+// returns all pins
+exports.getAllPins = async (req, res) => {
+  const pins = await Pins.find({});
+  res.status(200).send({data: pins});
+};
+
+// return a single pin
+exports.getSinglePin = async (req, res) => {
+  const pinId = req.params.id;
+  const foundPin = await Pin.findById(pinId);
+  res.status(200).send(foundPin);
+};
+
 // store to cloudinary and return path
 exports.createPin = async (req, res) => {
   const { imgURL, title, description, altText, link, category } = req.body;
@@ -45,19 +58,6 @@ exports.createPin = async (req, res) => {
     foundUser.posts.push(pinStringId);
     await foundUser.save();
     res.status(201).send({success: 'pin created', pinId: pinStringId});
-};
-
-// returns all pins
-exports.getAllPins = async (req, res) => {
-  const pins = await Pins.find({});
-  res.status(200).send({data: pins});
-};
-
-// return a single pin
-exports.getSinglePin = async (req, res) => {
-  const pinId = req.params.id;
-  const foundPin = await Pin.findById(pinId);
-  res.status(200).send(foundPin);
 };
 
 // update the pin
@@ -102,31 +102,34 @@ exports.deletePin = async (req, res) => {
   if(!foundUser) return res.status(401).send({error: 'User not found'});
   if(foundPin.creator != decodedToken.id) return res.status(401).send({error: 'Not authorized'});
 
-
+  try{
     await config.cloudinaryService.uploader.destroy(foundPin.imgPath.publicId);
-
     await Pin.findByIdAndDelete(pinId);
+
     foundUser.posts.map(i => i.id !== pinId);
     await foundUser.save();
     res.status(200).send({'success': 'pin deleted'});
+  }catch(error){
+    res.status(400).send({error});
+  }
 };
 
 exports.updateLike = async (req, res) => {
   const pinId = req.params.id;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
-  const decoded = verifyToken(cookie);
+  const decodedToken = verifyToken(cookie);
 
-  if(!decoded) return res.status(401).send({error: 'Not authorized'});
+  if(!decodedToken ) return res.status(401).send({error: 'Not authorized'});
   if(!foundPin) return res.status(401).send({error: 'Pin is not available'});  
   if(!foundUser) return res.status(401).send({error: 'User not found'});
 
   const foundPin = await Pin.findById(pinId);
-  const foundUser = await User.findById(decoded.id);
+  const foundUser = await User.findById(decodedToken.id);
   
   try {
-    if(foundPin.likes.includes(decoded.id) === true) {
+    if(foundPin.likes.includes(decodedToken.id) === true) {
       foundPin.likes = foundPin.likes - 1;
-      foundUser.likes = foundUser.likes.map(item => item.id !== decoded.id);
+      foundUser.likes = foundUser.likes.map(item => item.id !== decodedToken.id);
     }else{
       foundPin.likes = foundPin.likes + 1;
       foundUser.likes = foundUser.likes.push(pinId);
@@ -143,18 +146,18 @@ exports.updateLike = async (req, res) => {
 exports.createComment = async (req, res) => {
   const pinId = req.params.id;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
-  const decoded = verifyToken(cookie);
+  const decodedToken = verifyToken(cookie);
   const comment = req.body;
 
-  if(!decoded) return res.status(401).send({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
   if(!foundPin) return res.status(401).send({error: 'Pin is not available'}); 
   if(!foundUser) return res.status(401).send({error: 'User not found'});
 
   const foundPin = await Pin.findById(pinId);
-  const foundUser = await User.findById(decoded.id);
+  const foundUser = await User.findById(decodedToken.id);
 
   const newComment = {
-    creator: decoded.id,
+    creator: decodedToken.id,
     comment,
     pin: pinId,
   }
@@ -163,9 +166,11 @@ exports.createComment = async (req, res) => {
     const savedComment = new Comment(newComment);
     await savedComment.save();
 
+    const commetId = convertIdToString(savedComment._id);
+
     // push the id of the comment into Pin and User
-    foundPin.comments = foundPin.comments.push(savedComment._id);
-    foundUser.comments = foundUser.comments.push(savedComment._id);
+    foundPin.comments.push(commetId);
+    foundUser.comments.push(commetId);
 
     // save the newly added id to database
     await foundUser.save();
@@ -182,10 +187,10 @@ exports.updateComment = async (req, res) => {
   const foundComment = await Comment.findById(commentId);
 
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
-  const decoded = verifyToken(cookie);
+  const decodedToken = verifyToken(cookie);
 
-  if(!decoded) return res.status(401).send({error: 'Not authorized'});
-  if(decoded.id !== foundComment.creator.id) return res.status(401).send({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
+  if(decodedToken.id !== foundComment.creator.id) return res.status(401).send({error: 'Not authorized'});
 
   try{
     foundComment.comment = comment;
@@ -199,12 +204,12 @@ exports.updateComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
   const commentId = req.params.id;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
-  const decoded = verifyToken(cookie);
+  const decodedToken = verifyToken(cookie);
   const foundComment = await Comment.findById(commentId);
   const foundPin = await Pin.findById(foundComment.pin.id);
 
-  if(!decoded) return res.status(401).send({error: 'Not authorized'});
-  if(decoded.id !== foundComment.creator.id) return res.status(401).send({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
+  if(decodedToken.id !== foundComment.creator.id) return res.status(401).send({error: 'Not authorized'});
   if(!foundPin) return res.status(401).send({error: 'Pin not found'});
   try{
     foundPin.comments = foundPin.comments.map(item => item !== commentId);
