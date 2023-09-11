@@ -1,10 +1,12 @@
-import React from 'react';
-import Home from './pages/Home';
+import Nav from './components/Nav/Nav';
+import LandingPage from './pages/LandingPage';
+import './global.css';
 
 function App() {
   return (
     <>
-      <Home/>
+      <Nav/>
+      <LandingPage/>
     </>
   );
 }
