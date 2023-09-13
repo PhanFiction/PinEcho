@@ -1,20 +1,25 @@
-import sectionImg from '../assets/rectangle-6@2x.png';
+import './LandingPage.css';
 
 const LandingPage = () => {
   return(
-    <>
-      <section className="find-your-pin-section">
+    <div className="landing-page">
+      <section className="header-section">
         <h1>Find your Pin</h1>
-        <div>
-          <img src={require('../assets/rectangle-6@2x.png')} alt="img" />
-          <img src={require('../assets/rectangle-2@2x.png')} alt="img" />
-          <img src={require('../assets/rectangle-3@2x.png')} alt="img" />
-          <img src={require('../assets/rectangle-4@2x.png')} alt="img" />
-          <img src={require('../assets/rectangle-21@2x.png')} alt="img" />
+        <div className="header-items">
+          <img className="img img-child" src={require('../assets/rectangle-21@2x.png')} alt="img" />
+          <img className="img img-child2" src={require('../assets/rectangle-2@2x.png')} alt="img" />
+          <img className="img img-child3" src={require('../assets/rectangle-3@2x.png')} alt="img" />
+          <img className="img img-child2" src={require('../assets/rectangle-6@2x.png')} alt="img" />
+          <img className="img img-child" src={require('../assets/rectangle-4@2x.png')} alt="img" />
         </div>
+        <div className="blur-overlay"></div>
       </section>
       <section className="search-section">
-        <div></div>
+        <div className="search-items">
+          <img className="search-item-child" alt="img" src={require("../assets//rectangle-8@2x.png")} />
+          <img className="search-item-child2" alt="img" src={require("../assets/rectangle-10@2x.png")} />
+          <img className="search-item-child3" alt="img" src={require("../assets/rectangle-7@2x.png")} />
+        </div>
         <div>
           <b className="search-for-a">Search for a pin</b>
           <p className="find-an-item">{`Find an item you want to see. Something like “chocolate”. `}</p>
@@ -39,7 +44,7 @@ const LandingPage = () => {
           <li>Created By Steve Wu</li>
         </ul>
       </footer>
-    </>
+    </div>
   )
 };
 
