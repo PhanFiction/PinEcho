@@ -16,11 +16,9 @@ const LandingPage = () => {
       </section>
       <section className="search-section">
         <div className="search-items">
-          <img className="search-item-child" alt="img" src={require("../assets//rectangle-8@2x.png")} />
-          <img className="search-item-child2" alt="img" src={require("../assets/rectangle-10@2x.png")} />
-          <img className="search-item-child3" alt="img" src={require("../assets/rectangle-7@2x.png")} />
+          <img className="search-item-child" alt="img" src={require("../assets/search_bg.png")} />
         </div>
-        <div>
+        <div className="search-text">
           <b className="search-for-a">Search for a pin</b>
           <p className="find-an-item">{`Find an item you want to see. Something like “chocolate”. `}</p>
         </div>
