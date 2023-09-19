@@ -6,11 +6,7 @@ const LandingPage = () => {
       <section className="header-section">
         <h1>Find your Pin</h1>
         <div className="header-items">
-          <img className="img img-child" src={require('../assets/rectangle-21@2x.png')} alt="img" />
-          <img className="img img-child2" src={require('../assets/rectangle-2@2x.png')} alt="img" />
-          <img className="img img-child3" src={require('../assets/rectangle-3@2x.png')} alt="img" />
-          <img className="img img-child2" src={require('../assets/rectangle-6@2x.png')} alt="img" />
-          <img className="img img-child" src={require('../assets/rectangle-4@2x.png')} alt="img" />
+          <img className="header_bg" src={require('../assets/find_pin_bg.png')} alt="img" />
         </div>
         <div className="blur-overlay"></div>
       </section>

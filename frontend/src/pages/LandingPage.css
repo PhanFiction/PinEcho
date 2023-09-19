@@ -9,34 +9,26 @@
 .header-section {
   background-color: #fffbfb;
   position: relative;
-  padding-bottom: .5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .header-section h1 {
-  font-size: 4rem;
+  margin-top: 2rem;
+  font-size: calc(1.5rem + 2vw);
   text-align: center;
+  margin-bottom: 5rem;
 }
 
-.header-items {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.img-child {
-  width: 20%;
-}
-
-.img-child2, .img-child3 {
-  width: 15%;
+.header-items img {
+  width: 100%;
 }
 
 .blur-overlay {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 45%;
+  height: 35%;
   mix-blend-mode: normal;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff);
   backdrop-filter: blur(4px);
@@ -45,29 +37,13 @@
 .search-section {
   display: flex;
   background-color: var(--color-darkgray);
-  padding: 5rem;
-  justify-content: space-between;
-  gap: 5rem;
-}
-
-.search-items {
-  width: 100%;
-  max-width: 35%;
-  max-height: 35%;
+  padding: 1rem;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .search-item-child {
-  border-radius: var(--br-3xs);
-  object-fit: contain;
-  height: auto;
-  max-width: 100%;
-}
-
-.search-items {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  margin: 1.5rem;
+  width: 80%;
 }
 
 .search-text {
@@ -75,32 +51,39 @@
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  width: 50%;
 }
 
 .search-text b {
-  font-size: 3.5rem;
+  font-size: 4.5vw;
   color: #3b4a4a;
   margin: 1rem;
 }
 
-@media screen and (max-width: 1200px) {
-  .header-section h1 {
-    font-size: 2rem;
-  }
+@media screen and (max-width: 1440px) {
+
 }
 
 @media screen and (max-width: 600px) {
-  .header-section h1 {
-    font-size: 1rem;
+  .header-items img {
+    height: 50vh;
+  }
+  
+  .search-section {
+    padding: 5rem;
+    margin: 0;
   }
 
-  .search-section {
-    padding: 0;
-    margin: 0;
+  .search-item-child {
+    width: 70vw;
+    height: 70vh;
+    background-color: green;
   }
 
   .search-text {
     width: 100%;
+  }
+
+  .search-text b {
+    font-size: 3rem;
   }
 }
