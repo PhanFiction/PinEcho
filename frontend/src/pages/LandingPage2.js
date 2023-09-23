@@ -8,7 +8,7 @@ const LandingPage2 = () => {
       <div className="nav">
         <button className="pinecho">PinEcho</button>
         <div className="nav-items">
-          <button className="nav-link-1-wrapper">
+          <button className="nav-link-1-wrapper"> 
             <div className="nav-link-1">
               <div className="login">Login</div>
             </div>
