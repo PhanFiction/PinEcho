@@ -14,26 +14,40 @@ const LandingPage = () => {
         <div className="search-items">
           <img className="search-item-child" alt="img" src={require("../assets/search_bg.png")} />
         </div>
+        <div className="mobile">
+          <div className="overlay-text"></div>
+        </div>
         <div className="search-text">
           <b className="search-for-a">Search for a pin</b>
           <p className="find-an-item">{`Find an item you want to see. Something like “chocolate”. `}</p>
         </div>
       </section>
       <section className="sign-up-section">
+        <div className="sign-up-bg"></div>
+        <div className="overlay-text"></div>
         <h1>Sign up now to see more ideas</h1>
-        <form action="">
-          <input type="text" name="username" id="username" />
-          <label htmlFor="">Username</label>
-          <input type="text" name="fullname" id="fullname" />
-          <label htmlFor="">Fullname</label>
-          <input type="text" name="email" id="email" />
-          <label htmlFor="">Email</label>
-          <input type="text" name="password" id="password" />
-          <label htmlFor="">Password</label>
+        <form action="" className="sign-up-form">
+          <div>
+            <label htmlFor="">Username</label>
+            <input type="text" name="username" id="username"></input>
+          </div>
+          <div>
+            <label htmlFor="">Fullname</label>
+            <input type="text" name="fullname" id="fullname" />
+          </div>
+          <div>
+            <label htmlFor="">Email</label>
+            <input type="text" name="email" id="email" />
+          </div>
+          <div>
+            <label htmlFor="password">Password</label>
+            <input type="text" name="password" id="password" />
+          </div>
+          <button className="submit_btn" type='submit'>Submit</button>
+          <a href="#">Already have an account. Sign in Now.</a>
         </form>
       </section>
-      <section></section>
-      <footer>
+      <footer className="footer">
         <ul>
           <li>Created By Steve Wu</li>
         </ul>

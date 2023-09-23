@@ -1,6 +1,5 @@
 nav {
   display: flex;
-  background-color: #F7F7F7;
   justify-content: space-between;
   align-items: center;
   background-color: #f7f7f7;
@@ -14,7 +13,7 @@ nav ul {
   align-items: center;
 }
 
-nav > ul, li {
+nav ul, li {
   list-style: none;
 }
 
