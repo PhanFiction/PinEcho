@@ -1,0 +1,14 @@
+.pin-section {
+  display: flex;
+  border-radius: 16px;
+  -webkit-box-shadow: 2px 0px 10px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 2px 0px 10px 0px rgba(0,0,0,0.2);
+  box-shadow: 2px 0px 10px 0px rgba(0,0,0,0.2);
+  padding: 1.3rem;
+  gap: 1rem;
+}
+
+.pin-items {
+  display: flex;
+  flex-direction: column;
+}
