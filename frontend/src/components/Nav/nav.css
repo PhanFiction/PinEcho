@@ -4,16 +4,19 @@ nav {
   align-items: center;
   background-color: #f7f7f7;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.11);
-  padding: 0 .5rem 0 .5rem;
+  position: fixed;
+  width: 100%;
+  padding-left: 1.5rem;
 }
 
 nav ul {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  margin-right: 2rem;
 }
 
-nav ul, li {
+nav ul li {
   list-style: none;
 }
 

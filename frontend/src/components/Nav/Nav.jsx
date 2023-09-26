@@ -6,7 +6,7 @@ import PinEcho from '../../assets/PinEcho.svg';
 const Nav = () => {
   return(
     <nav>
-      <Icon iconName={PinEcho} altName={'pin'}/>
+      <Icon className="icon" iconName={PinEcho} altName={'pin'}/>
       <ul>
         <li className="btn-wrapper">
           <button className="btn">
