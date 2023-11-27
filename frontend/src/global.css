@@ -7,39 +7,28 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
 :root {
   /* fonts */
   --font-montserrat: Montserrat;
   --font-open-sans: "Open Sans";
   --font-merge-one: "Merge One";
   --font-salsa: Salsa;
-
-  /* font sizes */
-  --font-size-5xl: 24px;
-  --font-size-77xl: 96px;
-  --font-size-21xl: 40px;
-  --font-size-sm: 12px;
-  --font-size-med: 14px;
-  --font-size-lg: 18px;
-  --font-size-17xl: 36px;
-  --font-size-45xl: 64px;
-  --font-size-xl: 20px;
+  --font-helvetica: Helvetica;
 
   /* Colors */
   --color-white: #fff;
   --color-black: #000;
   --color-lightgray: #d0d0d0;
   --color-darkgray: #9caea9;
+  --color-lightergray: #f3f3f3;
   --color-firebrick-100: #a71818;
   --color-grayblack: #303030;
 
-  /* Paddings */
-  --padding-15xl: 34px;
-  --padding-8xs: 5px;
-
   /* border radiuses */
-  --br-mini: 15px;
-  --br-3xs: 10px;
-  --br-22xl: 41px;
-  --br-37xl-5: 56.5px;
+  --b-radius-sm: 8px;
+  --b-radius-md: 16px;
+
+  --mobile-margin: 6.5rem 2rem;
+  --desktop-margin: 6rem;
 }
