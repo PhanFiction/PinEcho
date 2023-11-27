@@ -3,7 +3,7 @@ import './Comment.css';
 const Comment = ({ name, comment, likes, timeStamp, children }) => {
   return(
     <article className="comment-section">
-      <div className="profile-container">
+      <div>
         {children}
       </div>
       <div className="comment-items">

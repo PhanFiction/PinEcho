@@ -1,14 +1,157 @@
 .pin-section {
+  margin: 7rem 13rem 1rem 13rem;
   display: flex;
-  border-radius: 16px;
+  border-radius: 1.5rem;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
   -webkit-box-shadow: 2px 0px 10px 0px rgba(0,0,0,0.2);
   -moz-box-shadow: 2px 0px 10px 0px rgba(0,0,0,0.2);
   box-shadow: 2px 0px 10px 0px rgba(0,0,0,0.2);
-  padding: 1.3rem;
+  width: 80vw;
+  font-family: var(--font-open-sans);
+}
+
+.pin-section img {
+  border-radius: 1.5rem;
+}
+
+.pin-item-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  word-wrap: break-word;
+  padding: 1.5rem;
   gap: 1rem;
 }
 
-.pin-items {
+#detail {
+  font-family: var(--font-merge-one);
+  font-weight: 500;
+}
+
+.creator p {
+  line-height: 1.5rem;
+}
+
+.creator p:first-child {
+  font-weight: 700;
+}
+
+.pin-item-container p {
+  font-size: 1rem;
+  margin: 0;
+  font-family: var(--font-helvetica);
+}
+
+.comment-container {
+  overflow: scroll;
+  word-wrap: break-word;
+  max-height: 200px;
+}
+
+.like-section, .create-comment-section {
   display: flex;
-  flex-direction: column;
+}
+
+.btn {
+  padding: .5rem;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+}
+
+.save_btn, .hide_btn {
+  color: var(--color-white);
+}
+
+.save_btn {
+  width: 20%;
+  max-width: 25;
+}
+
+.hide_btn {
+  width: 100%; 
+}
+
+.like-section {
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.create-comment-section {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.comment-button {
+  height: 50px;
+  width: 80%;
+  margin-left: 1rem;
+}
+
+.comment-button .frame {
+  align-items: center;
+  background-color: #f3f3f3;
+  border: 0px solid;
+  border-color: #000000;
+  border-radius: 25px;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 14px;
+  position: relative;
+}
+
+.comment-button .text-wrapper {
+  color: #b9b8b8;
+  font-family: "Open Sans-SemiBold", Helvetica;
+  font-size: 16px;
+  font-weight: 600;
+  height: 20px;
+  letter-spacing: 0;
+  line-height: 24px;
+  margin-top: -1px;
+  position: relative;
+  white-space: nowrap;
+  width: 128px;
+}
+
+.comment-button .arrow {
+  height: 22px;
+  margin-bottom: -1px;
+  margin-right: -1px;
+  margin-top: -1px;
+  position: relative;
+  width: 18px;
+}
+
+
+@media screen and (max-width: 1023px) {
+  .pin-section {
+    flex-direction: column;
+    align-items: normal;
+  }
+}
+
+@media screen and (max-width: 426px) {
+  .pin-section {
+    margin: 5rem 1rem;
+  }
+
+  .pin-section img {
+    width: 100%;
+  }
+
+  .pin-item-container {
+    padding: 0;
+  }
 }
