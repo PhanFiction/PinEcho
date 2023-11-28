@@ -1,4 +1,4 @@
-import './PinEchoPage.css';
+
 import PinEcho from "../../components/PinEcho/PinEcho";
 
 const PinEchoPage = () => {

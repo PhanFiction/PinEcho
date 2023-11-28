@@ -1,4 +1,4 @@
-import './UserIcon.css';
+
 
 const UserIcon = ({ name, iconSize='sm', children }) => {
   const firstLetter = name.split('')[0];

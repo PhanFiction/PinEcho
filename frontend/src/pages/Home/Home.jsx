@@ -1,5 +1,4 @@
 import React from 'react';
-import './Home.css';
 
 const images = [
   'https://res.cloudinary.com/dvxeoc3ny/image/upload/v1688024735/pins/lnz9ysehubweak08hu8b.webp',

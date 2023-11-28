@@ -1,4 +1,4 @@
-import './Label.css';
+
 
 const Label = ({ name, type="text", text="", noBorderOutline=false, children }) => {
   return (

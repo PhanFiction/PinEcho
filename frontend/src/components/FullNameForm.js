@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import "./FullNameForm.css";
+
 const FullNameForm = ({ userInfo, fullName, propTop }) => {
   const fullNameStyle = useMemo(() => {
     return {

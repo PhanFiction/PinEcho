@@ -1,4 +1,4 @@
-import './PinEcho.css';
+
 import { useState } from 'react';
 import UserIcon from '../UserIcon/UserIcon';
 import ToggleArrow from '../ToggleArrow/ToggleArrow';

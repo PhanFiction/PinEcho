@@ -1,5 +1,5 @@
 import Icon from '../Icon/Icon';
-import './nav.css';
+
 import UserIcon from '../../assets/user-circle.svg';
 import PinEcho from '../../assets/PinEcho.svg';
 

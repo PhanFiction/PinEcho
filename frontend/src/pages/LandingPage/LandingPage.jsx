@@ -1,4 +1,3 @@
-import './LandingPage.css';
 import Label from '../../components/Label/Label';
 import Footer from '../../components/Footer/Footer';
 

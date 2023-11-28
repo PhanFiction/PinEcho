@@ -1,4 +1,4 @@
-import './Comment.css';
+
 
 const Comment = ({ name, comment, likes, timeStamp, children }) => {
   return(

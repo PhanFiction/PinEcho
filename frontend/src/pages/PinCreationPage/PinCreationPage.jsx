@@ -1,5 +1,5 @@
 import Label from '../../components/Label/Label';
-import './PinCreationPage.css';
+
 
 const PinCreationPage = () => {
   return(
