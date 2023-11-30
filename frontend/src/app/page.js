@@ -1,9 +1,10 @@
 import './global.css';
+import Nav from '../components/Nav/Nav';
 
 export default function Page() {
   return (
-    <h1 className='text-4xl font-bold underline'>
-      Hello World
-    </h1>
+    <>
+      <Nav/>
+    </>
   )
 }

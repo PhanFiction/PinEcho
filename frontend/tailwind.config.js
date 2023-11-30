@@ -11,16 +11,14 @@ const config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
       colors: {
         white: "#fff",
         turquoise: "#63e2c6",
         aqua: "#6ef9f5",
         mediumseagreen: "#466751",
+        darkwhite: "#F8F8F8",
+        darkred: "#A71818",
+        brightred: "#FF1717",
       },
       fontFamily: {
         itim: "Itim",
