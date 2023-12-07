@@ -1,15 +1,22 @@
 import Label from '../../components/Label/Label';
 import Footer from '../../components/Footer/Footer';
+import Image from 'next/image';
 
 const LandingPage = () => {
   return(
-    <div className="landing-page">
-      <section className="header-section">
-        <h1>Find your Pin</h1>
-        <div className="header-items">
-          <img className="header_bg" src={require('../../assets/find_pin_bg.png')} alt="img" />
+    <div className="w-full">
+      <section className="flex flex-col">
+        <h1 className="">Find your Pin</h1>
+        <div className="relative w-full">
+          <div className="h-80 md:h-96 lg:h-screen">
+            <Image
+              src={require('../../assets/find_pin_bg.png')}
+              alt="img"
+              fill={true}
+            />
+          </div>
+          <div className="absolute blur-sm w-full bg-black h-24 md:h-28 lg:h-80 bottom-0 opacity-50"></div>
         </div>
-        <div className="blur-overlay"></div>
       </section>
       <section className="search-section">
         <div className="search-items">

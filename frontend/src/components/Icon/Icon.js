@@ -4,7 +4,7 @@ const Icon = ({ iconName, altName, width=64, height=64 }) => {
   return(
     <Image
       src={iconName}
-      altName={iconName}
+      altName={altName}
       width={width}
       height={height}
     />
