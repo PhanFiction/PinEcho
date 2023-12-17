@@ -13,19 +13,38 @@ const config = {
     extend: {
       colors: {
         white: "#fff",
-        turquoise: "#63e2c6",
-        aqua: "#6ef9f5",
-        mediumseagreen: "#466751",
-        darkwhite: "#F8F8F8",
-        darkred: "#A71818",
-        brightred: "#FF1717",
+        darkslategray: {
+          "100": "#424d46",
+          "200": "#3b4949",
+          "300": "#26413c",
+          "400": "#303030",
+        },
+        black: "#000",
+        indianred: {
+          "100": "#c56262",
+          "200": "#d24d4d",
+        },
+        lightgray: "#d0d0d0",
+        gray: "rgba(21, 21, 21, 0.8)",
+        darkgray: "#9caea9",
+        lightcyan: "#c9e9e0",
+        snow: "#fffbfb",
+        whitesmoke: "#f8f8f8",
+        firebrick: {
+          "100": "#a71818",
+          "200": "#aa0202",
+        },
+        red: "#ff1717",
       },
       fontFamily: {
-        itim: "Itim",
-        inter: "Inter",
+        montserrat: "Montserrat",
+        "open-sans": "'Open Sans'",
+        "merge-one": "'Merge One'",
+        "original-surfer": "'Original Surfer'",
+        salsa: "Salsa"
       },
     },
   },
   plugins: [],
 }
-export default config
+export default config;
