@@ -1,8 +1,10 @@
-
 import { useState } from 'react';
 import UserIcon from '../UserIcon/UserIcon';
 import ToggleArrow from '../ToggleArrow/ToggleArrow';
 import Comment from '../Comment/Comment';
+import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const fakeData = [
   {
@@ -67,8 +69,7 @@ const fakeData = [
   },
 ]
 
-const img1 = 'https://i.pinimg.com/564x/d7/3b/b1/d73bb189870fcb29aa4ca426534f7242.jpg';
-const img2 = 'https://i.pinimg.com/564x/cd/f9/75/cdf9751684e8cb0147ab0b156aef0855.jpg';
+const img1 = 'https://res.cloudinary.com/dvxeoc3ny/image/upload/v1688024735/pins/lnz9ysehubweak08hu8b.webp';
 const PinEcho = () => {
   const [show, showComment] = useState('true');
 
@@ -77,43 +78,55 @@ const PinEcho = () => {
   }
 
   return(
-    <section className="pin-section">
-      <img src={img2} alt="img" />
-      <div className="pin-item-container">
-        <button className="btn save_btn">Save</button>
-        <a href="/">pinterest.ca</a>
-        <h2>Pin on kirby moodboard</h2>
-        <p id="detail">Jul 8, 2021 - This Pin was discovered by BANANA 🍌. Discover (and save!) your own Pins on Pinterest</p>
-        <div className="profile">
-          <UserIcon name={'H'} />
-          <div className="creator">
-            <p>Henry</p>
-            <p>536 Followers</p>
+    <section className="w-full flex flex-col">
+      <div className="m-8 flex rounded-md">
+        <div className="mr-4">
+          <Image
+            src={img1}
+            alt="img"
+            width={500}
+            height={500}
+            style={{objectFit:"cover"}}
+          />
+        </div>
+        <div className="flex flex-col">
+          <button className="w-1/4 p-2 rounded-lg bg-red text-white">Save</button>
+          <a href="/" className="text-red">pinterest.ca</a>
+          <h2 className="font-semibold">Pin on kirby moodboard</h2>
+          <p id="detail">Jul 8, 2021 - This Pin was discovered by BANANA 🍌. Discover (and save!) your own Pins on Pinterest</p>
+
+          <div className="flex gap-4">
+            <UserIcon name={'H'} />
+            <div className="flex flex-col">
+              <p>Henry</p>
+              <p>536 Followers</p>
+            </div>
           </div>
-        </div>
-        <div className='like-section'>
-          <h3>{fakeData.length} Comment</h3>
-          <ToggleArrow toggle={show} handleToggle={toggleComments} />
-        </div>
-        {
-          show ? 
-          <div className="comment-container">
+
+          <div className="flex justify-between mt-8">
+            <h3 className="font-semibold">{fakeData.length} Comment</h3>
+            <ToggleArrow toggle={show} handleToggle={toggleComments} />
+          </div>
           {
-            fakeData.map((item, index) => 
-              <Comment key={index} name={item.username} comment={item.comment} likes={item.likes} timeStamp={'3y'}>
-                <UserIcon name={item.username} />
-              </Comment>
-            )
+            show ?
+            <div className="flex flex-col gap-8 p-1 w-full h-64 overflow-scroll no-scrollbar">
+              {
+                fakeData.map((item, index) =>
+                  <Comment key={index} name={item.username} comment={item.comment} likes={item.likes} timeStamp={'3y'}>
+                    <div className="mt-2">
+                      <UserIcon name={item.username} />
+                    </div>
+                  </Comment>
+                )
+              }
+            </div>
+          :
+          <></>
           }
-        </div>
-        : 
-        <></>
-        }
-        <div className="create-comment-section">
-          <UserIcon name={'H'} iconSize={'md'}/>
-          <div className="comment-button">
-            <div className="frame">
-              <div className="text-wrapper">Add a comment</div>
+          <div className="flex bg-red">
+            <UserIcon name={'H'} iconSize={'md'}/>
+            <div className="flex items-center bg-black text-white rounded-md ml-4 w-1/4">
+              <span className="font-semibold">Add a comment</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none">
                 <path d="M1.00001 21L17 11" stroke="black" stroke-width="2" stroke-linecap="round"/>
                 <path d="M17 11L1 1" stroke="black" stroke-width="2" stroke-linecap="round"/>
