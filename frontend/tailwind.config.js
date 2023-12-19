@@ -43,6 +43,9 @@ const config = {
         "original-surfer": "'Original Surfer'",
         salsa: "Salsa"
       },
+      screens: {
+        'desktop-large': '1440px',
+      }
     },
   },
   plugins: [],
