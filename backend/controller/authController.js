@@ -47,7 +47,7 @@ exports.signUp = async (req, res) => {
         errors: errorMessages
     });
   }
-  const { username, name, password, email } = req.body;
+  const { username, firstName, lastName, password, email } = req.body;
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -55,7 +55,8 @@ exports.signUp = async (req, res) => {
   // create new user and store password hash
   const user = new User({
       username,
-      name,
+      firstName,
+      lastName,
       email,
       passwordHash,
   });
