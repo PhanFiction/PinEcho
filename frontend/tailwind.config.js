@@ -35,6 +35,7 @@ const config = {
           "200": "#aa0202",
         },
         red: "#ff1717",
+        blue: "#004ba9",
       },
       fontFamily: {
         montserrat: "Montserrat",
