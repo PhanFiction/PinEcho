@@ -39,33 +39,36 @@ exports.login = async (req, res) => {
   }
 };
 
+// refix this part
 exports.signUp = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map(error => error.msg);
+    console.log(errorMessages);
     return res.status(401).json({
         errors: errorMessages
     });
   }
   const { username, firstName, lastName, password, email } = req.body;
+  console.log(req.body);
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
   // create new user and store password hash
   const user = new User({
-      username,
-      firstName,
-      lastName,
-      email,
-      passwordHash,
+    username,
+    firstName,
+    lastName,
+    email,
+    passwordHash,
   });
 
   try{
     await user.save();
     res
       .status(201)
-      .send({success: 'created account successfully', redirectURL: '/'});
+      .send({success: 'created account successfully', redirectURL: '/login'});
   }catch(error){
       res.status(401).send(error);
   };

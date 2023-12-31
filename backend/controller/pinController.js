@@ -7,7 +7,7 @@ const convertIdToString = require('../utils/idToString');
 
 // returns all pins
 exports.getAllPins = async (req, res) => {
-  const pins = await Pins.find({});
+  const pins = await Pin.find({});
   res.status(200).send({data: pins});
 };
 

@@ -7,7 +7,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  name: {
+  firstName: {
+    type: String,
+    minLength: 3,
+    required: true,
+  },
+  lastName: {
     type: String,
     minLength: 3,
     required: true,
@@ -21,7 +26,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     minLength: 4,
     required: true
-  }, 
+  },
+  profileImage: {
+    type: String,
+    default: "",
+  },
+  saves: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pin",
+    }
+  ],
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
