@@ -2,45 +2,90 @@ const mongoose = require('mongoose');
 const { faker } = require('@faker-js/faker');
 const Pin = require('../models/Pin'); // Adjust the path based on your project structure
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 const config = require('../config/config');
+const { uploadImg } = require('../utils/cloudinaryService');
+
+const createdUsers = [];
+const createdPins = [];
+const pinTaken = [];
+
+const numUsers = 15;
+const numPins = 30;
+const numComments = 20;
 
 mongoose.connect(config.databaseURL);
 
+const generateRandomUserId = () => {
+  let randomUser = Math.floor(Math.random() * createdUsers.length);
+  const randomUserId = createdUsers[randomUser]._id; // random user is selected
+  return randomUserId;
+}
+
+const generateRandomPinId = () => {
+  let randomPin = Math.floor(Math.random() * createdPins.length);
+  const randomPinId = createdPins[randomPin]._id; // random pin is selected
+  return randomPinId;
+}
+
+const generateRandomSentence = () => {
+  const wordCount = faker.number.int({ min: 5, max: 15 });
+  
+  // Generate an array of words
+  const words = Array.from({ length: wordCount }, () => faker.word.words());
+
+  // Join the words into a sentence
+  const sentence = words.join(' ');
+
+  // Capitalize the first letter of the sentence
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+};
+
 const seedDataFunction = async () => {
   try {
+    await config.cloudinaryService.api.delete_all_resources('profile/');
+    await config.cloudinaryService.api.delete_all_resources('posts/');
+
     // Delete all existing records
     await User.deleteMany({});
     await Pin.deleteMany({});
-
-    const createdPins = [];
+    await Comment.deleteMany({});
 
     // Generate fake users
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < numUsers; i++) {
+      const result = await uploadImg(faker.image.avatar(), 'profile');
       const fakeUser = {
         username: faker.internet.userName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         email: faker.internet.email(),
-        passwordHash: faker.random.alphaNumeric(8),
-        profileImage: faker.image.avatar(),
+        passwordHash: faker.string.alphanumeric(8),
+        profileImage: {
+          path: result.url,
+          publicId: result.public_id,
+        },
+        comments: [],
       };
 
       const user = await User.create(fakeUser);
-      createdPins.push(user);
+      createdUsers.push(user);
     }
 
     // Generate fake pins
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < numPins; i++) {
+      const result = await uploadImg(faker.image.image(), 'posts');
+      const randomUserId = generateRandomUserId();
+
       const fakePin = {
         title: faker.lorem.words(),
-        creator: createdPins[i % createdPins.length]._id,
+        creator: randomUserId,
         description: faker.lorem.sentence(),
         altText: faker.lorem.words(),
         link: faker.internet.url(),
-        category: [faker.random.word(), faker.random.word()],
+        category: [faker.word.sample(), faker.word.sample()],
         imgPath: {
-          path: faker.image.imageUrl(),
-          publicId: faker.random.alphaNumeric(10),
+          path: result.url,
+          publicId: result.public_id,
         },
       };
 
@@ -48,15 +93,29 @@ const seedDataFunction = async () => {
       createdPins.push(pin);
     }
 
-    // Update users and push Pin IDs into their saves array
-    for (let i = 0; i < 5; i++) {
-      const userId = createdPins[i]._id;
-      const pinIds = createdPins.map((pin) => pin._id);
-
-      await User.updateOne({ _id: userId }, { $push: { saves: { $each: pinIds } } });
+    // generate fake Comments
+    for (let i = 0; i < numComments; i++) {
+      const randomSentence = generateRandomSentence();
+      const randomUserId = generateRandomUserId();
+      const randomPinId = generateRandomPinId();
+      const fakeComment = {
+        comment: randomSentence,
+        creator: randomUserId,
+        pin: randomPinId,
+      };
+      const comment = await Comment.create(fakeComment);
+      await User.updateOne({ _id: randomUserId }, { $push: { comments: comment._id } });
     }
 
-    console.log('Data seeded successfully.');
+    // Update users and push Pin IDs into their saves array
+    for (let i = 0; i < createdPins.length;  i++) {
+      const randomUserId = generateRandomUserId();
+      const pinIds = createdPins.map((pin) => pin._id); // return all pins from createdPins
+      if(pinTaken.indexOf(pinIds[i]) === -1) {
+        pinTaken.push(pinIds[i]);
+        await User.updateOne({ _id: randomUserId }, { $push: { posts: pinIds[i] } });
+      }
+    }
 
   } catch (error) {
     console.error('Error seeding data:', error);
@@ -66,75 +125,6 @@ const seedDataFunction = async () => {
   }
 };
 
+
 // Call the seedData function
 seedDataFunction();
-
-
-/* // Generate fake users
-for (let i = 0; i < 5; i++) { // Generate 5 fake users as an example
-  const fakeUser = {
-    username: faker.internet.userName(),
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    email: faker.internet.email(),
-    passwordHash: faker.random.alphaNumeric(8),
-    profileImage: faker.image.avatar(),
-  };
-
-  seedData.push(fakeUser);
-}
-  
-// Generate fake pins
-for (let i = 0; i < 5; i++) { // Generate 10 fake pins as an example
-  const fakePin = {
-    title: faker.lorem.words(),
-    creator: seedData[i % seedData.length]._id, // Use the generated user's ObjectId
-    description: faker.lorem.sentence(),
-    altText: faker.lorem.words(),
-    link: faker.internet.url(),
-    category: [faker.random.word(), faker.random.word()],
-    imgPath: {
-      path: faker.image.imageUrl(),
-      publicId: faker.random.alphaNumeric(10),
-    },
-  };
-
-  seedData.push(fakePin);
-}
-
-// Update users and push Pin IDs into their saves array
-for (let i = 0; i < 5; i++) {
-  const userId = seedData[i]._id;
-  const pinIds = createdPins.map((pin) => pin._id);
-
-  await User.updateOne({ _id: userId }, { $push: { saves: { $each: pinIds } } });
-}
-
-console.log(seedData);
-
-async function seedDatabase() {
-  try {
-    // Insert fake users
-    const users = await User.insertMany(seedData.slice(0, 5));
-
-    // Map user _ids to be used as creators in fake pins
-    const userIds = users.map(user => user._id);
-
-    // Update creator field in fake pins with user _ids
-    const fakePins = seedData.slice(5).map((pin, index) => ({
-      ...pin,
-      creator: userIds[index % userIds.length],
-    }));
-
-    // Insert fake pins
-    await Pin.insertMany(fakePins);
-
-    console.log('Data seeding successful');
-  } catch (error) {
-    console.error('Data seeding failed', error);
-  } finally {
-    mongoose.connection.close();
-  }
-}
-
-seedDatabase(); */
