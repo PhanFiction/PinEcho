@@ -1,7 +1,8 @@
 "use client"
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
-const LazyImage = ({ src, alt, width, height }) => {
+const LazyImage = ({ src, alt, width, height, children }) => {
   const imageRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -32,14 +33,19 @@ const LazyImage = ({ src, alt, width, height }) => {
   }, [imageRef]);
 
   return (
-    <img
-      ref={imageRef}
-      src={isVisible ? src : ''}
-      alt={alt}
-      width={width}
-      height={height}
-      className="h-auto max-w-full rounded-lg"
-    />
+    <>
+      <Image
+        ref={imageRef}
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        placeholder="blur"
+        blurDataURL={src}
+        className="h-auto max-w-full rounded-lg object-cover"
+      />
+      {children}
+    </>
   );
 };
 
