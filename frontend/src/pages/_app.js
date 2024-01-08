@@ -1,31 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
 import '../styles/globals.css';
+import { fetchCredentials } from '../utils/auth';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(fetchCredentials());
 
   useEffect(() => {
-    const authTokenString = Cookies.get('authToken');
-    // Check the user's authentication status using cookies
-    const authToken = authTokenString ? JSON.parse(authTokenString) : null;
-    console.log(authToken);
-
-    if (authToken) {
+    if (authenticated) {
       // User is authenticated
       setAuthenticated(true);
-    } else {
-      // User is not authenticated
-      setAuthenticated(false);
-      // Redirect to the login page
-      router.push('/login');
     }
   }, []);
 
   return (
-    <div className={`app ${authenticated ? 'authenticated' : 'unauthenticated'}`}>
+    <div>
       <Component {...pageProps} />
     </div>
   );
