@@ -8,15 +8,20 @@ const authRoutes = require('./routes/authRoutes');
 const pinRoutes = require('./routes/pinRoutes');
 const mongoose = require('mongoose');
 
-app.use(
+/* app.use(
   cors({
-    origin: config.PORT,
+    origin: `localhost:3000/${config.PORT}`,
     methods:['GET','POST'],
     credentials: true,
   })
-);
-
+); */
 app.use(cookieParser());
+const corsOptions = {
+  origin: `http://localhost:3000`,
+  credentials: true, //included credentials as true
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
