@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import PinEcho from '../../assets/images/PinEcho.svg';
 import Dropdown from '../Dropdown/Dropdown';
-import {fetchCredentials, fetchUserCredentials, logout } from '../../utils/auth';
+import {fetchCredentials, fetchUserCredentials } from '../../utils/auth';
+import { logout } from '../../service/authService';
 import CircleBackground from '../CircleBackground/CircleBackground';
 import UserIcon from '../UserIcon/UserIcon';
 
@@ -19,8 +20,9 @@ const Nav = () => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
-  const handleLogout = () => {
-    const loggedOut = logout();
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    const loggedOut = await logout();
     if(loggedOut) {
       setAuthenticated(false);
       router.push('/login');
@@ -32,10 +34,11 @@ const Nav = () => {
     const isAuthenticated = fetchCredentials();
 
     // Update the state based on the authentication status
-    if(isAuthenticated) {
+    if(fetchUserCredentials.length > 1 || isAuthenticated) {
       setAuthenticated(true);
     }else{
       setAuthenticated(false);
+      router.push('/login');
     }
   }, []);
 
