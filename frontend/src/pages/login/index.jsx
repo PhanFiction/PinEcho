@@ -1,31 +1,56 @@
-import React,{ useState } from "react";
+import React,{ useState, useEffect } from "react";
 import '../../styles/globals.css';
+import Link from 'next/link';
+import { useRouter } from "next/router";
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import bgSignup from '../../assets/images/bg_signup.png';
 import Label from "../../components/Label/Label";
-import useAuth from '../../utils/useAuth';
-import Link from 'next/link';
-import { useRouter } from "next/router";
+import { fetchCredentials } from '../../utils/auth';
+import ActionButton from "../../components/ActionButton/ActionButton";
+import { loginService } from '../../service/authService';
+import Alert from '../../components/Alert/Alert';
 
 const Login = () => {
   const router = useRouter();
-  const authenticated = useAuth();
   const [username, setUsername] = useState("JohnDoe");
   const [password, setPassword] = useState("12345");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(null);
 
-  const handleLoginSubmit = (e) => {
+  useEffect(() => {
+    // Check the user's authentication status using the utility function
+    const isAuthenticated = fetchCredentials();
+
+    // Update the state based on the authentication status
+    if(isAuthenticated) {
+      setAuthenticated(true);
+    }else{
+      setAuthenticated(false);
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const authTokenValue = JSON.stringify({
-      username: 'JohnDoe',
-      name: 'John Doe',
-    });
-    Cookies.set('authToken', authTokenValue);
-    router.push('/');
+    const credentials = {
+      username,
+      password,
+    }
+    try {
+      const res = await loginService(credentials);    
+      if(res.success) {
+        const userData = JSON.stringify(res.user);
+        Cookies.set('userToken', userData, { expires: 1 });
+        router.push(res.redirectURL);
+      }
+    } catch(error) {
+      setAlertMessage('Unable to login');
+    }
   }
 
   return(
     <section className="w-full h-screen relative bg-black">
+      {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
       {
         authenticated ? (
           router.push('/')
@@ -51,16 +76,12 @@ const Login = () => {
               <Label type={"password"} text={"password"} value={password} name={"password"} onChange={(e) => setPassword(e.target.value)}>
                 Password
               </Label>
-              <button 
-                className="
-                  w-full bg-indianred-200 hover:bg-red 
-                  hover:drop-shadow-lg text-white p-2 mt-4 
-                  rounded-md ease-in duration-200"
-                onClick={handleLoginSubmit}
-              >
-                Submit
-              </button>
-              <Link className="text-sm m-2" href="/signup">Don't have an account. Sign up now.</Link>
+              <div className="mt-4">
+                <ActionButton handleClick={handleSubmit}>
+                  Login
+                </ActionButton>
+              </div>
+              <Link className="text-sm m-2 hover:text-blue" href="/signup">Don't have an account. Sign up now.</Link>
             </form>
           </div>
         </>
