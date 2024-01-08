@@ -36,6 +36,7 @@ const config = {
         },
         red: "#ff1717",
         blue: "#004ba9",
+        lightdarkred: "#A66"
       },
       fontFamily: {
         montserrat: "Montserrat",
