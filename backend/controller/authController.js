@@ -14,18 +14,25 @@ exports.login = async (req, res) => {
   };
 
   const { username, password } = req.body;
-  const user = await User.findOne({username});
+  const foundUser = await User.findOne({username});
   // compare password from post and db
-  const passwordCorrect = (user) === null ? false : await bcrypt.compare(password, user.passwordHash); 
+  const passwordCorrect = (foundUser) === null ? false : await bcrypt.compare(password, foundUser.passwordHash); 
 
   // if user not found, return error of 401 
-  if(!(user && passwordCorrect)) return res.status(401).send({error: "incorrect information"});
+  if(!(foundUser && passwordCorrect)) return res.status(401).send({error: "incorrect information"});
 
   const userForToken = {
-    username: user.username,
-    id: user._id,
+    username: foundUser.username,
+    id: foundUser._id,
   };
   const oneDay = 24 * 60 * 60 * 1000;
+  
+  const user = {
+    username: foundUser.username,
+    firstName: foundUser.firstName,
+    lastName: foundUser.lastName,
+    profileImage: foundUser.profileImage,
+  }
   
   try {
     const token = jwt.sign(userForToken, config.SECRET_KEY);
@@ -33,25 +40,22 @@ exports.login = async (req, res) => {
     res
       .cookie('authToken', token, {maxAge: oneDay}, { httpOnly: true })
       .status(201)
-      .send({success: 'logged in successfully', redirectURL: '/', token});
+      .send({success: 'logged in successfully', redirectURL: '/', user});
   }catch(error){
     res.send({'error': error})
   }
 };
 
-// refix this part
 exports.signUp = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map(error => error.msg);
-    console.log(errorMessages);
     return res.status(401).json({
-        errors: errorMessages
+      errors: errorMessages
     });
   }
   const { username, firstName, lastName, password, email } = req.body;
-  console.log(req.body);
-
+  
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -75,5 +79,7 @@ exports.signUp = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  res.clearCookie('session_id').send({success: 'successly logged out', redirectURL: '/'});
+  res.clearCookie('authToken');
+  res.clearCookie('userToken');
+  res.send({success: 'successly logged out', redirectURL: '/'});
 };
