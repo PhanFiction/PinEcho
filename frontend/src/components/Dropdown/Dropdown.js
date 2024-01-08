@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import Icon from '../Icon/Icon';
-import UserIcon from '../../assets/images/user-circle.svg';
 
-const Dropdown = ({ isOpen, setIsOpen }) => {
+const Dropdown = ({ isOpen, setIsOpen, handleLogout }) => {
   const dropdownRef = useRef();
 
   useEffect(() => {
@@ -38,25 +36,21 @@ const Dropdown = ({ isOpen, setIsOpen }) => {
 
   return (
     <div ref={dropdownRef} className={`absolute right-0 mt-2 bg-white border rounded-md shadow-md ${isOpen ? 'block' : 'hidden'}`}>
-      <ul className="py-2 px-4">
+      <ul className="flex flex-col p-1 gap-2 z-40">
         {/* Dropdown content */}
-        <li>
-          <a href="/profile" className="flex items-center">
-            <Icon iconName={UserIcon} altName={'userIcon'} width={24} height={24} className="mr-2" />
+        <li className="hover:bg-lightgray rounded-sm p-1">
+          <a href="/profile/23" className="text-center px-2">
             <span className="text-black hover:text-indianred-200">Profile</span>
           </a>
         </li>
-        <li>
-          <a href="/settings" className="flex items-center">
-            <Icon iconName={UserIcon} altName={'settingsIcon'} width={24} height={24} className="mr-2" />
-            <span className="text-black hover:text-indianred-200">Settings</span>
+
+        <li className="hover:bg-lightgray rounded-sm p-1">
+          <a href="/pin/saves" className="text-center px-2">
+            <span className="text-black hover:text-indianred-200">Saves</span>
           </a>
         </li>
-        <li>
-          <a href="/logout" className="flex items-center">
-            <Icon iconName={UserIcon} altName={'logoutIcon'} width={24} height={24} className="mr-2" />
-            <span className="text-black hover:text-indianred-200">Logout</span>
-          </a>
+        <li className="hover:bg-lightgray rounded-sm p-1" onClick={handleLogout}>
+          <span className="text-center px-2 text-black hover:text-indianred-200 hover:cursor-pointer">Logout</span>
         </li>
       </ul>
     </div>
