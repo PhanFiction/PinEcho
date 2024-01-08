@@ -1,7 +1,8 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const config = require('../config/config');
+const { uploadImg } = require('../utils/cloudinaryService');
+const verifyToken = require('../utils/verifyToken');
 
 // returns all users from database
 exports.getUsers = async (req, res) => {
@@ -11,11 +12,12 @@ exports.getUsers = async (req, res) => {
 
 // return user from database
 exports.getUser = async (req, res) => {
-  const token = req.cookie['authToken'];
   try{
-    const decoded = jwt.verify(token, config.SECRET_KEY);
-    if(!decoded) return res.send({error: 'Not authorized'});
-    const foundUser = await User.findById({id: decoded.id}, {'Username': 1, 'passwordHash': 0, '_id': 0, 'email': 1, 'name': 1});
+    const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
+    const decodedToken = verifyToken(cookie);
+    const foundUser = await User.findById(decodedToken.id).select('-passwordHash -posts -_id');
+
+    if(!decodedToken) return res.send({error: 'Not authorized'});
     res.status(200).send(foundUser);
   }catch(error){
     res.status(400).send({error});
@@ -24,8 +26,9 @@ exports.getUser = async (req, res) => {
 
 // update user information
 exports.updateUserInfo = async (req, res) => {
-  const { username, email, name, password } = req.body;
+  const { username, email, name, password, profileImg } = req.body;
 
+  let imgResult = '';
   const saltRounds = 10;
   let passwordHash = null;
   
@@ -39,11 +42,22 @@ exports.updateUserInfo = async (req, res) => {
 
   const foundUser = await User.findById({id: decoded.id});
   if(!foundUser) return res.status(401).send({error: 'user not found'});
+
+  // delete profile image if user provides profile img
+  if(profileImg.length > 1) {
+    await deleteImg(foundUser.imgPath.publicId, 'profile');
+    imgResult = await uploadImg(profileImg, 'profile');
+  }
+
   const updatedUserInfo = {
     username,
     name,
     email,
-    passwordHash: passwordHash === null ? foundUser.passwordHash : passwordHash
+    passwordHash: passwordHash === null ? foundUser.passwordHash : passwordHash,
+    profileImage: {
+      path: result.url,
+      publicId: result.public_id,
+    },
   };
 
   try {
