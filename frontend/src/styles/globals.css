@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Salsa:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Original+Surfer:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Merge+One:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap");
 @import './tailwind.css';
 
@@ -9,9 +8,29 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  /* ===== Scrollbar CSS ===== */
+  scrollbar-width: thin;
+  scrollbar-color: #a6a6a6 #ffffff;
 }
 
 ul, li {
   margin: 0;
   padding: 0;
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #a6a6a6;
+  border-radius: 12px;
+  border: 3px solid #ffffff;
 }
