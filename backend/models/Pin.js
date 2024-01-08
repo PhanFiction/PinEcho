@@ -36,13 +36,19 @@ const pinSchema = new mongoose.Schema({
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Comments",
+      ref: "Comment",
     }
   ],
-  likes: {
-    default: 0,
-    type: Number,
-  }
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Pin = mongoose.model('Pin', pinSchema);

@@ -12,9 +12,20 @@ const commentSchema = new mongoose.Schema({
   pin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Pin",
-  }
+  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }
+  ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Comments = mongoose.model('Comments', commentSchema);
 
-module.exports = Comments;
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.exports = Comment;

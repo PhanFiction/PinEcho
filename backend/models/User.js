@@ -28,8 +28,12 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   profileImage: {
-    type: String,
-    default: "",
+    path: {
+      type: String,
+    },
+    publicId: {
+      type: String,
+    }
   },
   saves: [
     {
@@ -46,15 +50,36 @@ const userSchema = new mongoose.Schema({
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Comments",
+      ref: "Comment",
     }
   ],
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Pin",
-    }
-  ]
+  pinLikes: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Pin",
+      }
+    ],
+    default: [],
+  },
+  commentLikes: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      }
+    ],
+    default: [],
+  },
+  followers: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      }
+    ],
+    default: [],
+  }
 });
 
 const User = mongoose.model('User', userSchema);
