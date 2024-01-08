@@ -2,29 +2,26 @@ import React from 'react';
 import '../../styles/globals.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { formatTimestampToDate } from '../../utils/timeService';
 
-const Comment = ({ name, comment, likes, timeStamp, children }) => {
+const Comment = ({ username, comment, likes, timeStamp, handleCommentLike, id, commentId, children }) => {
+  const modifiedTimeStamp = formatTimestampToDate(timeStamp);
   return(
-    <article className="flex gap-4">
-      <div>
-        {children}
-      </div>
+    <div className="flex items-center mt-2 mb-8 mx-2 gap-4 lg:mb-0">
+      <div>{children}</div>
       <div className="flex flex-col">
-        <div className="flex">
-          <p className="font-semibold mr-2">{name}</p>
-          <p>{comment}</p>
-        </div>
-        <ul className="flex items-center">
-          <li className="">
-            <span>{timeStamp}</span>
+        <p><span className="font-semibold">{username} </span>{comment}</p>
+        <ul className="flex items-center mt-1">
+          <li className="text-gray">
+            <span>{modifiedTimeStamp}</span>
           </li>
           <li className="flex items-center ml-8">
-            <FontAwesomeIcon className="mt-1 cursor-pointer hover:text-red" icon={faHeart}/>
-            <span className="ml-2 mt-0.5">{likes}</span>
+            <FontAwesomeIcon className="mt-1 cursor-pointer hover:text-red" icon={faHeart} onClick={(e) => handleCommentLike(e, commentId)}/>
+            <span className="ml-2">{likes}</span>
           </li>
         </ul>
       </div>
-    </article>
+    </div>
   )
 };
 
