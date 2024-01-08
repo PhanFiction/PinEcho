@@ -1,10 +1,17 @@
-import React from "react";
+import React from 'react';
 import '../../styles/globals.css';
 
-export default function ActionButton({ children }) {
+const ActionButton = ({ handleClick, bgColor="red", children }) => {
+
   return (
-    <button className="w-full bg-red text-white p-2 mt-4 rounded-md shadow-lg hover:bg-firebrick-200 ease-in duration-300">
-     { children }
+    <button
+      type="button" 
+      className={`w-full bg-${bgColor} text-white p-1 rounded-md shadow-lg hover:bg-firebrick-200 ease-in duration-300`}
+      onClick={handleClick}
+    >
+      { children }
     </button>
-  )
-}
+  );
+};
+
+export default ActionButton;
