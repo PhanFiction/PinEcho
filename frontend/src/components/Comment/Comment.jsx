@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { formatTimestampToDate } from '../../utils/timeService';
 
-const Comment = ({ username, comment, likes, timeStamp, handleCommentLike, id, commentId, children }) => {
+const Comment = ({ username, comment, likes, timeStamp, handleCommentLike, isLiked, commentId, children }) => {
+  console.log('isLiked ', isLiked)
   const modifiedTimeStamp = formatTimestampToDate(timeStamp);
   return(
     <div className="flex items-center mt-2 mb-8 mx-2 gap-4 lg:mb-0">
@@ -16,7 +17,12 @@ const Comment = ({ username, comment, likes, timeStamp, handleCommentLike, id, c
             <span>{modifiedTimeStamp}</span>
           </li>
           <li className="flex items-center ml-8">
-            <FontAwesomeIcon className="mt-1 cursor-pointer hover:text-red" icon={faHeart} onClick={(e) => handleCommentLike(e, commentId)}/>
+            {
+              isLiked ? 
+              <FontAwesomeIcon className="mt-1 hover:cursor-pointer text-red" icon={faHeart} onClick={(e) => handleCommentLike(e, commentId)}/>
+              : 
+              <FontAwesomeIcon className="mt-1 hover:cursor-pointer text-black hover:text-red" icon={faHeart} onClick={(e) => handleCommentLike(e, commentId)}/>
+            }
             <span className="ml-2">{likes}</span>
           </li>
         </ul>

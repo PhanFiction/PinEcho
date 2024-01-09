@@ -16,13 +16,18 @@ const PinEchoPage = () => {
     const fetchSinglePin = async () => {
       if(params) {
         const req = await getSinglePin(params.id);
-        console.log(req);
+        //console.log(req);
         const userData = await getUser();
         console.log(userData);
         const pinSaved = findItem(userData.saves, req._id);
-        const pinLiked = findItem(userData.saves, req._id);
-        //const commentLiked =
-        const updatedPinData = { ...req, pinSaved, pinLiked };
+        const pinLiked = findItem(userData.pinLikes, req._id);
+        const commentLiked = req.comments.map(item => {
+          const isLiked = userData.commentLikes.includes(item._id);
+          return { ...item, isLiked };
+        });
+        //console.log(commentLiked);
+        const updatedPinData = { ...req, pinSaved, pinLiked, comments: [...commentLiked]};
+        console.log(updatedPinData);
         setPinData(updatedPinData);
       }
     }
@@ -54,6 +59,18 @@ const PinEchoPage = () => {
     e.preventDefault();
     const req = await updateCommentLike(commentId);
     console.log(req);
+    const { isLiked } = req;
+
+    // Update the comment state
+    const updatedComments = pinData.comments.map(comment => {
+      if (comment._id === commentId) {
+        return { ...comment, isLiked };
+      }
+      console.log(user);
+      return comment;
+    });
+    setPinData({...pinData, comments: [...updatedComments]});
+    console.log(pinData);
   }
 
   const handlePinLike = async (e) => {

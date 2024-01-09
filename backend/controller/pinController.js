@@ -285,20 +285,26 @@ exports.updateCommentLike = async (req, res) => {
 
     const foundComment = await Comment.findById(commentId);
     const foundUser = await User.findById(decodedToken.id);
+    let isLiked;
 
     if(!foundComment) return res.status(401).send({error: 'Comment is not available'});  
     if(!foundUser) return res.status(401).send({error: 'User not found'});
 
     if (foundComment.likes.includes(decodedToken.id)) {
       // If the user already liked the comment, remove the like
-      foundComment.likes = foundComment.likes.filter(userId => userId.toString() !== foundUser._id.toString());
+      foundComment.likes.filter(userId => userId.toString() !== foundUser._id.toString());
+      foundUser.commentLikes.filter(commentId => commentId.toString() !== foundComment._id.toString());
+      isLiked = false;
     } else {
       // If the user hasn't liked the comment, add the like
       foundComment.likes.push(foundUser._id);
+      foundUser.commentLikes.push(foundComment._id);
+      isLiked = true;
     }    
     await foundComment.save();
-    const commentLikes = foundComment.likes.length;
-    res.status(201).send({'successfully updated likes': commentLikes})
+    await foundUser.save();
+
+    res.status(201).send({'successfully updated likes': foundComment._id, isLiked})
   }catch(error){
     res.status(401).send({error});
   }

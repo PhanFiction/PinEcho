@@ -122,6 +122,7 @@ const PinEcho = ({
                             id={item.creator._id}
                             handleCommentLike={handleCommentLike}
                             commentId={item._id}
+                            isLiked={item.isLiked}
                           >
                             <CircleBackground md={true}>
                               <UserIcon name={item.username} imgName={item.creator.profileImage ? item.creator.profileImage.path : ""}/>
@@ -167,6 +168,7 @@ const PinEcho = ({
                               id={item.creator._id}
                               handleCommentLike={handleCommentLike}
                               commentId={item._id}
+                              isLiked={item.isLiked}
                             >
                               <div className="mt-2 text-black">
                                 <CircleBackground md={true}>
