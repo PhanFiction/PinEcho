@@ -51,7 +51,9 @@ const PinEchoPage = () => {
     console.log('submit comment');
     if(message.length < 1) return;
     const req = await createComment(params.id, {comment: message});
-    console.log(req);
+    console.log(req.comment);
+    setPinData((prev) => [{...prev, comments: [...prev.comments, ...req.comment]}]);
+    console.log(pinData);
   }
 
   const handleMessageChange = (e) => {

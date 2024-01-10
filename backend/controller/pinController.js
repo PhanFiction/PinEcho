@@ -245,7 +245,7 @@ exports.createComment = async (req, res) => {
     foundPin.comments.push(commentId);
     foundUser.comments.push(commentId);
 
-    const foundComment = await Comment.findById(commentId)
+    const foundNewComment = await Comment.findById(commentId)
       .populate({
         path: 'creator',
         select: 'username profileImage -_id'
@@ -254,7 +254,7 @@ exports.createComment = async (req, res) => {
     // save the newly added id to database
     //await foundUser.save();
     //await foundPin.save();
-    res.status(201).send({'success': foundComment});
+    res.status(201).send({'success':{ comment: foundNewComment }});
   }catch(error){
     res.status(401).send({error});
   }
