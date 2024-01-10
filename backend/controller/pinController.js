@@ -21,7 +21,7 @@ exports.getSinglePin = async (req, res) => {
   try {
     const pinId = req.params.id;
     const foundPin = await Pin.findById(pinId)
-      .populate({path: 'comments', populate: { path: 'creator', select: 'username creator profileImage' }})
+      .populate({path: 'comments', populate: { path: 'creator', select: 'username creator profileImage -_id' }})
       .populate({path: 'creator', select: 'profileImage username'});
 
     if (!foundPin) {
@@ -138,7 +138,7 @@ exports.getSaves = async (req, res) => {
     const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
     const decodedToken = verifyToken(cookie);
     const foundUser = await User.findById(decodedToken.id).select('saves')
-      .populate({path: 'saves', populate: { path: 'creator', select: 'username creator profileImage' }});
+      .populate({path: 'saves', populate: { path: 'creator', select: 'username creator profileImage -_id'}});
 
     if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
     if(decodedToken.id !== foundUser.id) return res.status(401).send({error: 'Not authorized'});
@@ -239,17 +239,22 @@ exports.createComment = async (req, res) => {
     const savedComment = new Comment(newComment);
     await savedComment.save();
 
-    const commetId = convertIdToString(savedComment._id);
+    const commentId = convertIdToString(savedComment._id);
 
     // push the id of the comment into Pin and User
-    foundPin.comments.push(commetId);
-    foundUser.comments.push(commetId);
+    foundPin.comments.push(commentId);
+    foundUser.comments.push(commentId);
 
-    console.log(foundPin);
+    const foundComment = await Comment.findById(commentId)
+      .populate({
+        path: 'creator',
+        select: 'username profileImage -_id'
+      });
+
     // save the newly added id to database
     //await foundUser.save();
     //await foundPin.save();
-    //res.status(201).send({'successfully created comment': foundPin.comments})
+    res.status(201).send({'success': foundComment});
   }catch(error){
     res.status(401).send({error});
   }
@@ -285,7 +290,6 @@ exports.updateCommentLike = async (req, res) => {
 
     const foundComment = await Comment.findById(commentId);
     const foundUser = await User.findById(decodedToken.id);
-    let isLiked;
 
     if(!foundComment) return res.status(401).send({error: 'Comment is not available'});  
     if(!foundUser) return res.status(401).send({error: 'User not found'});
@@ -294,17 +298,15 @@ exports.updateCommentLike = async (req, res) => {
       // If the user already liked the comment, remove the like
       foundComment.likes.filter(userId => userId.toString() !== foundUser._id.toString());
       foundUser.commentLikes.filter(commentId => commentId.toString() !== foundComment._id.toString());
-      isLiked = false;
     } else {
       // If the user hasn't liked the comment, add the like
       foundComment.likes.push(foundUser._id);
       foundUser.commentLikes.push(foundComment._id);
-      isLiked = true;
     }    
     await foundComment.save();
     await foundUser.save();
 
-    res.status(201).send({'successfully updated likes': foundComment._id, isLiked})
+    res.status(201).send({success: 'successfully updated likes'});
   }catch(error){
     res.status(401).send({error});
   }
