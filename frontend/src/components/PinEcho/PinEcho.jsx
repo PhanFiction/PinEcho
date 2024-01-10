@@ -68,7 +68,7 @@ const PinEcho = ({
             <p className="font-opensans">{altText}</p>
             <div className="flex gap-4 items-center">
               <CircleBackground md>
-                <UserIcon name={pinCreator.username} imgName={pinCreator.profileImage.path}/>
+                <UserIcon name={pinCreator.username} imgName={pinCreator.profileImage ? pinCreator.profileImage.path : ""}/>
               </CircleBackground>
               <div className="flex flex-col">
                 <p className="font-semibold text-lg">{pinCreator.username}</p>
@@ -104,7 +104,7 @@ const PinEcho = ({
                     <div className="mt-auto bg-black">
                       <ModalComment
                         username={user.username}
-                        profileImg={user.profileImage.path}
+                        profileImg={user.profileImage ? user.profileImage.path : ""}
                         message={message}
                         handleChange={handleMessageChange}
                         handleSubmit={handleSubmitComment}
@@ -133,7 +133,7 @@ const PinEcho = ({
                       <div className="mt-auto bg-black">
                         <ModalComment
                           username={user.username}
-                          profileImg={user.profileImage.path}
+                          profileImg={user.profileImage ? user.profileImage.path : ""}
                           message={message}
                           handleChange={handleMessageChange}
                           handleSubmit={handleSubmitComment}
@@ -192,7 +192,7 @@ const PinEcho = ({
             <div className="gap-4 p-2 items-center hidden desktop-large:flex">
               <span>
                 <CircleBackground md={true}>
-                  <UserIcon name={user.username} imgName={user.profileImage.path}/>
+                  <UserIcon name={user.username} imgName={user.profileImage ? user.profileImage.path : ""}/>
                 </CircleBackground>
               </span>
               <div className="flex w-full gap-4">

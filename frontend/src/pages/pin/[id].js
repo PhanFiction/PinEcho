@@ -10,24 +10,25 @@ const PinEchoPage = () => {
   const params = useParams();
   const [pinData, setPinData] = useState([]);
   const [message, setMessage] = useState('Cool Picture');
-  const [user, setUserCredential] = useState(fetchUserCredentials());
+  const [user, setUserCredential] = useState([]);
 
   useEffect(() => {
+    /*
+     1. Refix user authentication
+     2. Cookie is not updated as it is stored and unaltered,.
+     */
     const fetchSinglePin = async () => {
       if(params) {
         const req = await getSinglePin(params.id);
-        //console.log(req);
         const userData = await getUser();
-        console.log(userData);
+        setUserCredential(userData);
         const pinSaved = findItem(userData.saves, req._id);
         const pinLiked = findItem(userData.pinLikes, req._id);
         const commentLiked = req.comments.map(item => {
           const isLiked = userData.commentLikes.includes(item._id);
           return { ...item, isLiked };
-        });
-        //console.log(commentLiked);
+        })
         const updatedPinData = { ...req, pinSaved, pinLiked, comments: [...commentLiked]};
-        console.log(updatedPinData);
         setPinData(updatedPinData);
       }
     }
@@ -36,7 +37,8 @@ const PinEchoPage = () => {
 
   const handleSavePin = async (e) => {
     e.preventDefault();
-    await savePin(params.id);
+    const req = await savePin(params.id);
+    console.log(req);
   
     // Update the pinData with the new pinSaved value
     const updatedPinData = { ...pinData, pinSaved: !pinData.pinSaved };
@@ -64,13 +66,12 @@ const PinEchoPage = () => {
     // Update the comment state
     const updatedComments = pinData.comments.map(comment => {
       if (comment._id === commentId) {
-        return { ...comment, isLiked };
+        return { ...comment, isLiked: !comment.isLiked };
       }
-      console.log(user);
       return comment;
     });
+    console.log(updatedComments);
     setPinData({...pinData, comments: [...updatedComments]});
-    console.log(pinData);
   }
 
   const handlePinLike = async (e) => {

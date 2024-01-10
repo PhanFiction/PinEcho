@@ -5,16 +5,17 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import PinEcho from '../../assets/images/PinEcho.svg';
 import Dropdown from '../Dropdown/Dropdown';
-import {fetchCredentials, fetchUserCredentials } from '../../utils/auth';
+import { fetchCredentials } from '../../utils/auth';
 import { logout } from '../../service/authService';
 import CircleBackground from '../CircleBackground/CircleBackground';
 import UserIcon from '../UserIcon/UserIcon';
+import { getUser } from "../../service/authService";
 
 const Nav = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const [user, setUser] = useState(fetchUserCredentials());
+  const [user, setUser] = useState([]);
 
   const toggleDropdown = () => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
@@ -34,8 +35,9 @@ const Nav = () => {
     const isAuthenticated = fetchCredentials();
 
     // Update the state based on the authentication status
-    if(fetchUserCredentials.length > 1 || isAuthenticated) {
+    if(isAuthenticated) {
       setAuthenticated(true);
+      getUser().then(data => setUser(data));
     }else{
       setAuthenticated(false);
       router.push('/login');
@@ -56,7 +58,7 @@ const Nav = () => {
             <li>
               <span className="hover:cursor-pointer text-black" onClick={toggleDropdown}>
                 <CircleBackground md={true}>
-                  <UserIcon name={user.username} imgName={user.profileImage.path ? user.profileImage.path : ""}/>
+                  <UserIcon name={user.username} imgName={user.profileImage ? user.profileImage.path : ""}/>
                 </CircleBackground>
               </span>
               <Dropdown isOpen={isOpen} setIsOpen={toggleDropdown} handleLogout={handleLogout}/>

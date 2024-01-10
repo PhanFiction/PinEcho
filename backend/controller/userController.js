@@ -15,7 +15,7 @@ exports.getUser = async (req, res) => {
   try{
     const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
     const decodedToken = verifyToken(cookie);
-    const foundUser = await User.findById(decodedToken.id).select('-passwordHash -posts -_id');
+    const foundUser = await User.findById(decodedToken.id).select('-passwordHash -v');
 
     if(!decodedToken) return res.send({error: 'Not authorized'});
     res.status(200).send(foundUser);
