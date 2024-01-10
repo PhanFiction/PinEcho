@@ -21,6 +21,7 @@ const PinEchoPage = () => {
       if(params) {
         const req = await getSinglePin(params.id);
         const userData = await getUser();
+        console.log(req);
         setUserCredential(userData);
         const pinSaved = findItem(userData.saves, req._id);
         const pinLiked = findItem(userData.pinLikes, req._id);
@@ -59,19 +60,29 @@ const PinEchoPage = () => {
 
   const handleCommentLike = async (e, commentId) => {
     e.preventDefault();
-    const req = await updateCommentLike(commentId);
-    console.log(req);
-    const { isLiked } = req;
-
-    // Update the comment state
-    const updatedComments = pinData.comments.map(comment => {
-      if (comment._id === commentId) {
-        return { ...comment, isLiked: !comment.isLiked };
+    try {
+      const req = await updateCommentLike(commentId);
+      if(req.success) {
+        // Update the comment state
+        const updatedComments = pinData.comments.map(comment => {
+          if (comment._id === commentId) {
+            const isLiked = comment.likes.includes(user._id);
+          
+            if (isLiked) {
+              // If the user already liked the comment, remove their ID from the likes array
+              const updatedLikes = comment.likes.filter(id => id !== user._id);
+              return { ...comment, likes: updatedLikes, isLiked: false };
+            } else {
+              // If the user hasn't liked the comment, add their ID to the likes array
+              const updatedLikes = [...comment.likes, user._id];
+              return { ...comment, likes: updatedLikes, isLiked: true };
+            }
+          }
+          return comment;
+        });
+        setPinData({...pinData, comments: [...updatedComments]});
       }
-      return comment;
-    });
-    console.log(updatedComments);
-    setPinData({...pinData, comments: [...updatedComments]});
+    }catch(error){}
   }
 
   const handlePinLike = async (e) => {
