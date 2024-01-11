@@ -5,10 +5,11 @@ import UserIcon from '../UserIcon/UserIcon';
 import CircleBackground from '../CircleBackground/CircleBackground';
 import Link from 'next/link';
 
-const ImageGrid = ({ initialImages, imagesPerPage = 15 }) => {
+const ImageGrid = ({ initialImages, imagesPerPage = 5 }) => {
   const [loadedImages, setLoadedImages] = useState(initialImages.slice(0, imagesPerPage));
   const [pageNumber, setPageNumber] = useState(1);
   const containerRef = useRef(null);
+  console.log(initialImages, loadedImages);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -16,14 +17,17 @@ const ImageGrid = ({ initialImages, imagesPerPage = 15 }) => {
       const endIndex = startIndex + imagesPerPage;
       const newImages = initialImages.slice(startIndex, endIndex);
       setLoadedImages((prevImages) => [...newImages, ...prevImages,]);
+      console.log(loadedImages);
+      setPageNumber((prevPage) => prevPage + 1);
     };
 
     const handleIntersection = async (entries) => {
       const [entry] = entries;
       if (entry.isIntersecting && entry.intersectionRatio > 0) {
         // When the container is intersected (scrolled to), fetch more images
-        setPageNumber((prevPage) => prevPage + 1);
-        await fetchImages(); // Call fetchImages asynchronously
+        if(loadedImages.length < initialImages.length) {
+          await fetchImages(); // Call fetchImages asynchronously
+        }
       }
     };
 
@@ -44,8 +48,6 @@ const ImageGrid = ({ initialImages, imagesPerPage = 15 }) => {
     };
   }, [pageNumber]);
 
-  // <div className="columns-1 gap-5 sm:columns-2 sm:gap-4 md:columns-3 lg:columns-4">
-  // <div className="columns-1 gap-5 sm:columns-2 sm:gap-4 md:columns-3 lg:columns-5 mx-auto space-y-4">
   return (
     <>
       <section className="p-4 sm:p-8">
@@ -85,61 +87,3 @@ const ImageGrid = ({ initialImages, imagesPerPage = 15 }) => {
 };
 
 export default ImageGrid;
-
-
-/* 
-  useEffect(() => {
-    const handleScroll = () => {
-      const isNearBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100;
-
-      if (isNearBottom) {
-        // Calculate the index range for the next set of images
-        const startIndex = pageNumber * imagesPerPage;
-        const endIndex = startIndex + imagesPerPage;
-        const newImages = additionalImages.slice(startIndex, endIndex);
-      
-        setLoadedImages((prevImages) => [...prevImages, ...newImages]);
-        setPageNumber((prevPage) => prevPage + 1);
- 
-        if (endIndex > additionalImages.length) {
-          const newImages = additionalImages.slice(startIndex, additionalImages.length);
-          setLoadedImages((prevImages) => [...prevImages, ...newImages]);
-          setPageNumber((prevPage) => prevPage + 1);
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [pageNumber]);
-
-
-Fix this to generate a set of images as user scroll downwards
-useEffect(() => {
-  const handleScroll = () => {
-    console.log('scroll activated')
-    const isNearBottom =
-      window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100;
-
-    if (isNearBottom) {
-      // Calculate the index range for the next set of images
-      const startIndex = (pageNumber - 1) * imagesPerPage;
-      const endIndex = startIndex + imagesPerPage;
-
-      // Load more content if there are additional images
-      if (endIndex < additionalImages.length) {
-        const newImages = additionalImages.slice(startIndex, endIndex);
-        setLoadedImages((prevImages) => [...prevImages, ...newImages]);
-        setPageNumber((prevPage) => prevPage + 1);
-      }
-    }
-  };
-
-  window.addEventListener('scroll', handleScroll);
-
-  return () => {
-    window.removeEventListener('scroll', handleScroll);
-  };
-}, [pageNumber, additionalImages, imagesPerPage]); */
