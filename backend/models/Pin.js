@@ -22,7 +22,6 @@ const pinSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  category: [],
   imgPath: {
     path: {
       type: String,
