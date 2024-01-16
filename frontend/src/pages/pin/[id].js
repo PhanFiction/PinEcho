@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PinEcho from "../../components/PinEcho/PinEcho";
 import { useParams } from 'next/navigation';
 import { getSinglePin, savePin, updateCommentLike, updatePinLike, createComment } from "../../service/pinService";
