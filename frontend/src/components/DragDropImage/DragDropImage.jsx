@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import '../../styles/globals.css';
+import { useState, createRef } from 'react';
 
-const DragAndDropImage = ({ children }) => {
+const DragAndDropImage = ({ image, setImage, removeImage, setFileSizeOverLimit, children }) => {
   const [dragging, setDragging] = useState(false);
-  const [image, setImage] = useState(null);
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -28,12 +26,7 @@ const DragAndDropImage = ({ children }) => {
   const handleImageClick = () => {
     inputRef.current.click();
   };
-
-  const handleFileChange = (e) => {
-    const files = e.target.files;
-    handleImageDrop(files);
-  };
-
+  
   const handleImageDrop = (files) => {
     if (files.length > 0) {
       const reader = new FileReader();
@@ -44,7 +37,20 @@ const DragAndDropImage = ({ children }) => {
     }
   };
 
-  const inputRef = React.createRef();
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    const file_size = e.target.files[0].size;
+    console.log(file_size);
+    if (file_size > 50 * 1024 * 1024) { // 50 MB in bytes
+      setFileSizeOverLimit(true);
+    } else {
+      setFileSizeOverLimit(false);
+    }
+    
+    handleImageDrop(files);
+  };
+
+  const inputRef = createRef();
 
   return (
     <div
@@ -53,16 +59,17 @@ const DragAndDropImage = ({ children }) => {
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onClick={handleImageClick}
     >
       {image ? (
-        <img src={image} alt="Dropped" className="max-w-full max-h-96 mx-auto" />
+        <img src={image} alt="Dropped" className="max-w-full max-h-96 mx-auto" onClick={removeImage}/>
       ) : (
         <>
-          { children }
+          <div onClick={handleImageClick}>
+            { children }
+          </div>
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpeg, image/png"
             ref={inputRef}
             className="hidden"
             onChange={handleFileChange}
