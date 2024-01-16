@@ -1,5 +1,4 @@
 import Nav from "./Nav/Nav"
-import '../styles/globals.css';
  
 export default function Layout({ children }) {
   return (
