@@ -1,10 +1,9 @@
-import React from "react";
-import '../../styles/globals.css';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment, faXmark, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 export default function Modal({ title, handlePinLike, pinLiked, children }) {
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
   return (
     <>
       <FontAwesomeIcon className="text-2xl hover:cursor-pointer" icon={faComment} onClick={() => setShowModal(true)}/>

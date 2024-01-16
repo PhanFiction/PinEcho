@@ -1,5 +1,3 @@
-import React from 'react';
-import '../../styles/globals.css';
 import CircleBackground from '../CircleBackground/CircleBackground';
 import UserIcon from '../UserIcon/UserIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

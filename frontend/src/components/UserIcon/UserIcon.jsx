@@ -1,6 +1,4 @@
-import React from "react";
 import Image from 'next/image';
-import '../../styles/globals.css';
 
 const UserIcon = ({ name="", imgName="", textSize="md", children }) => {
   const firstLetter = name.slice(0, 1).toUpperCase(); // Use slice to get the first letter
