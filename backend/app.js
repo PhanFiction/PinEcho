@@ -8,13 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const pinRoutes = require('./routes/pinRoutes');
 const mongoose = require('mongoose');
 
-/* app.use(
-  cors({
-    origin: `localhost:3000/${config.PORT}`,
-    methods:['GET','POST'],
-    credentials: true,
-  })
-); */
+
 app.use(cookieParser());
 const corsOptions = {
   origin: `http://localhost:3000`,
@@ -22,9 +16,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
+
+app.use(bodyParser.json({limit:'50mb'})); 
+app.use(bodyParser.urlencoded({extended:true, limit:'50mb'})); 
 
 mongoose.connect(config.databaseURL)
   .then(() => console.log('Connected to database'));
