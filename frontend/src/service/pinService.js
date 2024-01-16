@@ -39,6 +39,10 @@ export const updateCommentLike = async (commentId) => {
 
 export const createComment = async (pinId, data) => {
   const req = await axios.post(`${api}/pin/comment/${pinId}`, data, config);
-  console.log(req.data);
+  return req.data;
+}
+
+export const createPin = async (data) => {
+  const req = await axios.post(`${api}/pin/create-new-pin`, data, config);
   return req.data;
 }

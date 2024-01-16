@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import '../../styles/globals.css';
+import { useState, useEffect } from "react";
 import Image from 'next/image';
 import bgSignup from '../../assets/images/bg_signup.png';
 import Label from "../../components/Label/Label";

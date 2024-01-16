@@ -12,7 +12,7 @@ export const loginService = async (credentials) => {
   return res.data;
 }
 
-export const getUser = async (credentials) => {
+export const getUser = async () => {
   const res = await axios.get(`${api}/user`, config);
   return res.data;
 }
