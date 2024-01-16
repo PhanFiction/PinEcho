@@ -1,7 +1,3 @@
-// CircleBackground.js
-import React from "react";
-import '../../styles/globals.css';
-
 const CircleBackground = ({ sm = false, md = false, lg = false, children }) => {
   let sizeClass;
 

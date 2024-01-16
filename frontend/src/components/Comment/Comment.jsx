@@ -1,11 +1,8 @@
-import React from 'react';
-import '../../styles/globals.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { formatTimestampToDate } from '../../utils/timeService';
 
 const Comment = ({ username, comment, likes, timeStamp, handleCommentLike, isLiked, commentId, children }) => {
-  console.log('isLiked ', isLiked)
   const modifiedTimeStamp = formatTimestampToDate(timeStamp);
   return(
     <div className="flex items-center mt-2 mb-8 mx-2 gap-4 lg:mb-0">

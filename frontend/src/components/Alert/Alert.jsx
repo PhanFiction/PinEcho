@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import '../../styles/globals.css';
+import { useState } from 'react';
 
 const Alert = ({ message, onClose }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -27,22 +26,6 @@ const Alert = ({ message, onClose }) => {
           </div>
         </label>
       </div>
-/*       <div className={styles['alert-container']}>
-        <label className={styles['alert']}>
-          <input
-            type="checkbox"
-            className={styles.alertCheckbox}
-            autoComplete="off"
-            onChange={handleClose}
-          />
-          <div className={`${styles.alert} ${styles.error}`}>
-            <span className={styles.alertClose} onClick={handleClose}>
-              X
-            </span>
-            <span className={styles.alertText}>{message}</span>
-          </div>
-        </label>
-      </div> */
     )
   );
 };
