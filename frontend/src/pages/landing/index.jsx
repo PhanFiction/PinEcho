@@ -47,7 +47,7 @@ const Landing = () => {
           <div className="absolute blur-sm w-full bg-black h-24 md:h-28 lg:h-80 bottom-0 opacity-50"></div>
         </div>
       </section>
-      <section className="w-full bg-darkgray py-4 md:p-8">
+      <section className="w-full bg-greenishgray py-4 md:p-8">
         <div className="flex justify-around flex-col md:flex-row sm:m-4 md:m-12">
           <div>
             <Image
