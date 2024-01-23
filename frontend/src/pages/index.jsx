@@ -1,19 +1,12 @@
 import { useState, useEffect } from 'react';
 import ImageGrid from '../components/ImageGrid/ImageGrid';
 import { getAllPins } from '../service/pinService';
-import { useRouter } from 'next/router';
-import { fetchCredentials } from '../utils/auth';
+import Layout from '../components/Layout';
 
 const Home = () => {
   const [data, setData] = useState('');
-  const router = useRouter();
 
   useEffect(() => {
-    const loggedIn = fetchCredentials();
-    if (!loggedIn) {
-      router.push('/landing');
-    }
-
     const fetchPosts = async () => {
       const req = await getAllPins();
       setData(req.data);
@@ -22,9 +15,9 @@ const Home = () => {
   }, []);
 
   return (
-    <>
+    <Layout>
       {
-        data?.length < 1 ? (
+        data.length < 1 ? (
           <h1></h1>
         )
         : 
@@ -32,7 +25,7 @@ const Home = () => {
           <ImageGrid initialImages={data}/>
         )
       }
-    </>
+    </Layout>
   )
 };
 
