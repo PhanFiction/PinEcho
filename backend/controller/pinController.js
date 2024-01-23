@@ -38,20 +38,21 @@ exports.getSinglePin = async (req, res) => {
 
 // store to cloudinary and return path
 exports.createPin = async (req, res) => {
+  const { image, title, description, altText, link } = req.body;
   try {
-    const { imgURL, title, description, altText, link, category } = req.body;
-    const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
+    const { image, title, description, altText, link } = req.body;
+    const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
     const decodedToken = verifyToken(cookie);
 
     if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
 
     const foundUser = await User.findById(decodedToken.id);
   
-    if(imgURL === "") return res.status(400).send({error: "missing image"});
+    if(image === "") return res.status(400).send({error: "missing image"});
     if(!foundUser) return res.status(401).send({error: 'User not found'});
   
     // store to cloudinary
-    const result = await uploadImg(imgURL, 'posts');;
+    const result = await uploadImg(image, 'posts');;
   
     // create new pin
     const newPin = new Pin({
@@ -60,7 +61,6 @@ exports.createPin = async (req, res) => {
       creator: foundUser._id,
       altText,
       link,
-      category,
       imgPath: {
         path: result.url,
         publicId: result.public_id,
@@ -69,11 +69,11 @@ exports.createPin = async (req, res) => {
       likes: [],
     });
   
-      const savedPin = await newPin.save();
-      const pinStringId = convertIdToString(savedPin._id);
-      foundUser.posts.push(pinStringId);
-      await foundUser.save();
-      res.status(201).send({success: 'pin created', pinId: pinStringId});
+    const savedPin = await newPin.save();
+    const pinStringId = convertIdToString(savedPin._id);
+    foundUser.posts.push(pinStringId);
+    await foundUser.save();
+    res.status(201).send({success: 'pin created', pinId: pinStringId});
   } catch (error) {
     res.status(500).send({ error: 'Internal Server Error' });
   }
@@ -108,28 +108,33 @@ exports.updatePin = async (req, res) => {
 };
 
 exports.deletePin = async (req, res) => {
-  const pinId = req.params.id;
-  const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
+  try {
+    const pinId = req.params.id;
+    const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
 
-  const decodedToken = verifyToken(cookie); // verify token
+    const decodedToken = verifyToken(cookie); // verify token
 
-  const foundPin = await Pin.findById(pinId);
-  const foundUser = await User.findById(decodedToken.id);
- 
-  if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
-  if(!foundPin) return res.status(401).send({error: 'Pin is not available'});  
-  if(!foundUser) return res.status(401).send({error: 'User not found'});
-  if(foundPin.creator != decodedToken.id) return res.status(401).send({error: 'Not authorized'});
+    const foundPin = await Pin.findById(pinId);
+    const foundUser = await User.findById(decodedToken.id);
 
-  try{
+    if (!decodedToken) return res.status(401).send({ error: 'Not authorized' });
+    if (!foundPin) return res.status(401).send({ error: 'Pin is not available' });
+    if (!foundUser) return res.status(401).send({ error: 'User not found' });
+    if (foundPin.creator != decodedToken.id) return res.status(401).send({ error: 'Not authorized' });
+
+    // Delete associated comments
+    await Comment.deleteMany({ pinId: foundPin._id });
+
+    // Delete pin and remove from user's posts
     await deleteImg(foundPin.imgPath.publicId, 'posts');
     await Pin.findByIdAndDelete(pinId);
 
-    foundUser.posts.map(i => i.id !== pinId);
+    foundUser.posts = foundUser.posts.filter((postId) => postId !== pinId);
     await foundUser.save();
-    res.status(200).send({'success': 'pin deleted'});
-  }catch(error){
-    res.status(400).send({error});
+
+    res.status(200).send({ success: 'Pin and associated comments deleted' });
+  } catch (error) {
+    res.status(400).send({ error });
   }
 };
 
