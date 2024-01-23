@@ -1,6 +1,6 @@
 import { useState, createRef } from 'react';
 
-const DragAndDropImage = ({ image, setImage, removeImage, setFileSizeOverLimit, children }) => {
+const DragAndDropImage = ({ image="", setImage, removeImage, setFileSizeOverLimit, children }) => {
   const [dragging, setDragging] = useState(false);
 
   const handleDragEnter = (e) => {
@@ -40,7 +40,6 @@ const DragAndDropImage = ({ image, setImage, removeImage, setFileSizeOverLimit, 
   const handleFileChange = (e) => {
     const files = e.target.files;
     const file_size = e.target.files[0].size;
-    console.log(file_size);
     if (file_size > 50 * 1024 * 1024) { // 50 MB in bytes
       setFileSizeOverLimit(true);
     } else {
