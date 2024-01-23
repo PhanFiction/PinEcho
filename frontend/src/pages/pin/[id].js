@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import PinEcho from "../../components/PinEcho/PinEcho";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getSinglePin, savePin, updateCommentLike, updatePinLike, createComment } from "../../service/pinService";
-import { fetchUserCredentials } from "../../utils/auth"; // remove
 import { getUser } from "../../service/authService";
 import { findItem } from "../../utils/auth";
 import Alert from '../../components/Alert/Alert';
+import { deletePin } from "../../service/pinService";
+import Layout from "../../components/Layout";
+import withAuth from "../../hocs/withAuth";
 
 const PinEchoPage = () => {
   const params = useParams();
+  const router = useRouter();
   const [pinData, setPinData] = useState([]);
-  const [message, setMessage] = useState('Cool Picture');
+  const [message, setMessage] = useState('');
   const [user, setUserCredential] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null);
 
@@ -19,15 +22,15 @@ const PinEchoPage = () => {
       if(params) {
         const req = await getSinglePin(params.id);
         const userData = await getUser();
-        console.log(req);
         setUserCredential(userData);
         const pinSaved = findItem(userData.saves, req._id);
         const pinLiked = findItem(userData.pinLikes, req._id);
+        const isCreator = findItem(userData.posts, req._id);
         const commentLiked = req.comments.map(item => {
           const isLiked = userData.commentLikes.includes(item._id);
           return { ...item, isLiked };
         })
-        const updatedPinData = { ...req, pinSaved, pinLiked, comments: [...commentLiked]};
+        const updatedPinData = { ...req, pinSaved, pinLiked, isCreator, comments: [...commentLiked]};
         setPinData(updatedPinData);
       }
     }
@@ -57,11 +60,12 @@ const PinEchoPage = () => {
         ...prev,
         comments: [...prev.comments, req.comment]
       }));
+      setMessage("");
     } catch (error) {
       setAlertMessage('Failed to create comment');
     }
   }
-
+  
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
@@ -104,10 +108,22 @@ const PinEchoPage = () => {
     }
   }
 
-  const { _id, creator, comments, title, altText, description, imgPath, link, pinSaved, pinLiked } = pinData;
+  const handleDeletePin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await deletePin(params.id);
+      if(res.success) {
+        router.push('/');
+      }
+    } catch (error) {
+      setMessage('Failed to delete Pin');
+    }
+  }
+
+  const { _id, creator, comments, title, altText, description, imgPath, link, pinSaved, pinLiked, isCreator } = pinData;
 
   return (
-    <>
+    <Layout>
       {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
       <PinEcho 
         pinId={_id}
@@ -127,9 +143,11 @@ const PinEchoPage = () => {
         pinSaved={pinSaved}
         pinLiked={pinLiked}
         handlePinLike={handlePinLike}
+        handleDeletePin={handleDeletePin}
+        isCreator={isCreator}
       />
-    </>
+    </Layout>
   )
 };
 
-export default PinEchoPage;
+export default withAuth(PinEchoPage);
