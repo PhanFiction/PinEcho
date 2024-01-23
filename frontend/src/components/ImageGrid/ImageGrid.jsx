@@ -59,7 +59,7 @@ const ImageGrid = ({ initialImages, imagesPerPage = 10 }) => {
                           textSize={"lg"}
                         />
                       </CircleBackground>
-                      <h1 className="ml-4 text-white">{index}. {item.creator.username}</h1>
+                      <h1 className="ml-4 text-white">{item.creator.username}</h1>
                     </div>
                   </div>
                 </Overlay>
