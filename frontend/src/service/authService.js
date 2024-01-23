@@ -13,11 +13,29 @@ export const loginService = async (credentials) => {
 }
 
 export const getUser = async () => {
-  const res = await axios.get(`${api}/user`, config);
-  return res.data;
+  try {
+    const res = await axios.get(`${api}/user`, config);
+    return res.data;
+  }catch(error){
+    console.log("error ", error);
+  }
 }
 
 export const logout = async () => {
   const res = await axios.get(`${api}/logout`, config);
   return res.data;
+}
+
+export const updateUser = async  (data) => {
+  const res = await axios.put(`${api}/user`, data, config);
+  return res.data;
+}
+
+export const checkAuthentication = async () => {
+  try {
+    const res = await axios.get(`${api}/authentication`, config);
+    return res;
+  } catch(error) {
+    return error;
+  }
 }

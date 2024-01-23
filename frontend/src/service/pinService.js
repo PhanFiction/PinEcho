@@ -46,3 +46,8 @@ export const createPin = async (data) => {
   const req = await axios.post(`${api}/pin/create-new-pin`, data, config);
   return req.data;
 }
+
+export const deletePin = async (id) => {
+  const req = await axios.delete(`${api}/pin/${id}`, config);
+  return req.data;
+}
