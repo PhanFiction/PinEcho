@@ -24,16 +24,14 @@ const config = {
           "100": "#c56262",
           "200": "#d24d4d",
         },
+        greenishgray: "#9CAEA9",
+        darkgray: "#535353",
         lightgray: "#d0d0d0",
         gray: "rgba(21, 21, 21, 0.8)",
-        darkgray: "#9caea9",
         lightcyan: "#c9e9e0",
         snow: "#fffbfb",
         whitesmoke: "#f8f8f8",
-        firebrick: {
-          "100": "#a71818",
-          "200": "#aa0202",
-        },
+        firebrick: "#aa0202",
         red: "#ff1717",
         blue: "#004ba9",
         lightdarkred: "#A66"
@@ -50,6 +48,9 @@ const config = {
       }
     },
   },
+  safeList: [
+    'darkgray: #535353',
+  ],
   plugins: [],
 }
 export default config;
