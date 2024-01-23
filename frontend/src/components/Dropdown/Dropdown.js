@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 const Dropdown = ({ isOpen, setIsOpen, handleLogout }) => {
   const dropdownRef = useRef();
@@ -39,15 +40,14 @@ const Dropdown = ({ isOpen, setIsOpen, handleLogout }) => {
       <ul className="flex flex-col p-1 gap-2 z-40">
         {/* Dropdown content */}
         <li className="hover:bg-lightgray rounded-sm p-1">
-          <a href="/profile/23" className="text-center px-2">
+          <Link href="/profile" className="text-center px-2">
             <span className="text-black hover:text-indianred-200">Profile</span>
-          </a>
+          </Link>
         </li>
-
         <li className="hover:bg-lightgray rounded-sm p-1">
-          <a href="/pin/saves" className="text-center px-2">
+          <Link href="/pin/saves" className="text-center px-2">
             <span className="text-black hover:text-indianred-200">Saves</span>
-          </a>
+          </Link>
         </li>
         <li className="hover:bg-lightgray rounded-sm p-1" onClick={handleLogout}>
           <span className="text-center px-2 text-black hover:text-indianred-200 hover:cursor-pointer">Logout</span>
