@@ -1,23 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import '../styles/globals.css';
-import { fetchCredentials } from '../utils/auth';
+import { AuthProvider } from '../providers/Auth';
+
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(fetchCredentials());
-
-  useEffect(() => {
-    if (authenticated) {
-      // User is authenticated
-      setAuthenticated(true);
-    }
-  }, []);
-
   return (
-    <div>
+    <AuthProvider>
       <Component {...pageProps} />
-    </div>
+    </AuthProvider>
   );
 }
 
