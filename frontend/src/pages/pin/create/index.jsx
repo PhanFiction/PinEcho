@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import Label from '../../../components/Label/Label';
-import Layout from '../../../components/Layout';
 import DragAndDropImage from '../../../components/DragDropImage/DragDropImage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleArrowUp } from '@fortawesome/free-solid-svg-icons';
 import ActionButton from '../../../components/ActionButton/ActionButton';
 import { createPin } from '../../../service/pinService';
+import Alert from '../../../components/Alert/Alert';
+import Layout from '../../../components/Layout';
+import withAuth from "../../../hocs/withAuth"
 
 const PinCreationPage = () => {
   const [title, setTitle] = useState('');
@@ -14,9 +16,14 @@ const PinCreationPage = () => {
   const [link, setLink] = useState('');
   const [image, setImage] = useState(null);
   const [isFileSizeOverLimit, setFileSizeOverLimit] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(image === null) {
+      setAlertMessage('Please upload an image');
+      return;
+    }
     const newPin = {
       title,
       description,
@@ -24,7 +31,20 @@ const PinCreationPage = () => {
       link,
       image,
     }
-    await createPin(newPin);
+    try {
+      const req = await createPin(newPin);
+      if(req.success) {
+        setAlertMessage("Successfully created pin");
+        setTitle("");
+        setDescription("");
+        setAltText("");
+        setLink("");
+        setFileSizeOverLimit(false);
+        setImage(null);
+      }
+    } catch (error) {
+      setAlertMessage('Unable to create pin')
+    }
     setFileSizeOverLimit(false);
   }
 
@@ -34,6 +54,7 @@ const PinCreationPage = () => {
 
   return(
     <Layout>
+      {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
       <section className="w-full lg:h-screen flex flex-col justify-center items-center font-[var(--font-open-sans)]">
         <h1 className="mt-16 font-semibold text-2xl border-b-2">Create Pin</h1>
         <div 
@@ -47,21 +68,24 @@ const PinCreationPage = () => {
               <p>Drag & Drop an image here or click to select</p>
             </DragAndDropImage>
           </div>
-          <form className="grid grid-cols-1 lg:grid-cols-2 gap-1 w-full md:gap-4 md:w-2/4 lg:w-3/5 font-open-sans text-sm lg:gap-4">
+          <form
+            onSubmit={handleSubmit} 
+            className="grid grid-cols-1 lg:grid-cols-2 gap-1 w-full md:gap-4 md:w-2/4 lg:w-3/5 font-open-sans text-sm lg:gap-4"
+          >
             <div className="col-span-2">
-              <Label name={"title"} text={"Add a title"} onChange={(e)=>{setTitle(e.target.value)}}/>
+              <Label name={"title"} text={"Add a title"} onChange={(e)=>{setTitle(e.target.value)}} required=""/>
             </div>
             <div className="col-span-2">
-              <Label name={"description"} text={"Add a description"} onChange={(e) => {setDescription(e.target.value)}}/>
+              <Label name={"description"} text={"Add a description"} onChange={(e) => {setDescription(e.target.value)}} required=""/>
             </div>
             <div className="col-span-2">
-              <Label name={"alt-description"} text={"Add an alt description"} onChange={(e) => {setAltText(e.target.value)}}/>
+              <Label name={"alt-description"} text={"Add an alt description"} onChange={(e) => {setAltText(e.target.value)}} required=""/>
             </div>
             <div className="col-span-2">
-              <Label name={"url"} text={"Add a link"} onChange={(e)=>{setLink(e.target.value)}}/>
+              <Label name={"url"} text={"Add a link"} onChange={(e)=>{setLink(e.target.value)}} required=""/>
             </div>
             <div className="col-span-2 mt-2">
-              <ActionButton handleClick={handleSubmit} disable={isFileSizeOverLimit}>
+              <ActionButton disable={isFileSizeOverLimit} buttonType="submit">
                 {isFileSizeOverLimit ? "File is to big" : "Create"}
               </ActionButton>
             </div>
@@ -72,4 +96,4 @@ const PinCreationPage = () => {
   )
 };
 
-export default PinCreationPage;
+export default withAuth(PinCreationPage);
