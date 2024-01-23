@@ -1,8 +1,23 @@
-const ActionButton = ({ handleClick, bgColor="red", disable=false, children }) => {
+const ActionButton = ({ 
+  handleClick, bgColor="red", buttonType="button", 
+  disable=false, textColor="textWhite",
+  children }) => {
+    const colorVariants = {
+      "darkgray": "bg-darkgray hover:bg-gray",
+      "lightgray": "bg-lightgray hover:bg-darkgray",
+      "red": "bg-red hover:bg-firebrick",
+      "firebrick": "bg-firebrick hover:bg-red",
+      "white": "bg-white",
+      "textWhite": "text-white"
+    }
   return (
     <button
-      type="button" 
-      className={`w-full bg-${bgColor} text-white p-1 rounded-md shadow-lg hover:bg-firebrick-200 ease-in duration-300`}
+      type={buttonType} 
+      className={
+        `w-full hover:text-white
+        ${colorVariants[bgColor]} ${colorVariants[textColor]} p-2 rounded-md 
+        shadow-lg ease-in duration-300`
+      }
       onClick={handleClick}
       disabled={disable}
     >
