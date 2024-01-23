@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "../../../components/Layout";
 import ImageGrid from "../../../components/ImageGrid/ImageGrid";
 import { getSavedPins } from "../../../service/pinService";
+import withAuth from "../../../hocs/withAuth"
 
 const Saves = () => {
   const [savedPins, setSavedPins] = useState([]);
@@ -11,7 +12,7 @@ const Saves = () => {
     const fetchSinglePin = async () => {
       const req = await getSavedPins();
       setSavedPins(req.saves);
-    }
+    };
     fetchSinglePin();
   }, []);
 
@@ -32,4 +33,4 @@ const Saves = () => {
   )
 };
 
-export default Saves;
+export default withAuth(Saves);
