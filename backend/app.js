@@ -11,16 +11,9 @@ const mongoose = require('mongoose');
 
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, '.next/static')));
-
-// Serve the Next.js index.html for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '.next', 'index.html'));
-});
-
 const corsOptions = {
   origin: `http://localhost:3000`,
-  credentials: true, //included credentials as true
+  credentials: true, // included credentials as true
 };
 
 app.use(cors(corsOptions));
