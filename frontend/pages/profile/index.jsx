@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import Label from '../../components/Label/Label';
-import CircleBackground from '../../components/CircleBackground/CircleBackground';
-import UserIcon from '../../components/UserIcon/UserIcon';
-import DragAndDropImage from '../../components/DragDropImage/DragDropImage';
+import Label from '../../src/components/Label/Label';
+import CircleBackground from '../../src/components/CircleBackground/CircleBackground';
+import UserIcon from '../../src/components/UserIcon/UserIcon';
+import DragAndDropImage from '../../src/components/DragDropImage/DragDropImage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router'
-import { getUser, updateUser } from '../../service/authService';
-import ActionButton from '../../components/ActionButton/ActionButton';
-import Layout from '../../components/Layout';
-import withAuth from "../../hocs/withAuth";
-import Alert from '../../components/Alert/Alert';
+import { getUser, updateUser } from '../../src/service/authService';
+import ActionButton from '../../src/components/ActionButton/ActionButton';
+import Layout from '../../src/components/Layout';
+import withAuth from "../../src/hocs/withAuth";
+import Alert from '../../src/components/Alert/Alert';
 
 const Profile = () => {
   const router = useRouter();

@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import Label from '../../../components/Label/Label';
-import DragAndDropImage from '../../../components/DragDropImage/DragDropImage';
+import Label from '../../../src/components/Label/Label';
+import DragAndDropImage from '../../../src/components/DragDropImage/DragDropImage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleArrowUp } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from '../../../components/ActionButton/ActionButton';
-import { createPin } from '../../../service/pinService';
-import Alert from '../../../components/Alert/Alert';
-import Layout from '../../../components/Layout';
-import withAuth from "../../../hocs/withAuth"
+import ActionButton from '../../../src/components/ActionButton/ActionButton';
+import { createPin } from '../../../src/service/pinService';
+import Alert from '../../../src/components/Alert/Alert';
+import Layout from '../../../src/components/Layout';
+import withAuth from "../../../src/hocs/withAuth"
 
 const PinCreationPage = () => {
   const [title, setTitle] = useState('');

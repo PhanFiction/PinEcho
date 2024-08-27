@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Image from 'next/image';
-import bgSignup from '../../assets/images/bg_signup.png';
-import Label from "../../components/Label/Label";
+import bgSignup from '../../src/assets/images/bg_signup.png';
+import Label from "../../src/components/Label/Label";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import { signUpService } from "../../service/authService";
-import ActionButton from '../../components/ActionButton/ActionButton';
-import Alert from "../../components/Alert/Alert";
-import withoutAuth from '../../hocs/withoutAuth';
+import { signUpService } from "../../src/service/authService";
+import ActionButton from '../../src/components/ActionButton/ActionButton';
+import Alert from "../../src/components/Alert/Alert";
+import withoutAuth from '../../src/hocs/withoutAuth';
 
 export default withoutAuth(function Signup() {
   const router = useRouter();

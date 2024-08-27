@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
-import ImageGrid from '../components/ImageGrid/ImageGrid';
-import { getAllPins } from '../service/pinService';
-import Layout from '../components/Layout';
+import ImageGrid from '../src/components/ImageGrid/ImageGrid';
+import { getAllPins } from '../src/service/pinService';
+import Layout from '../src/components/Layout';
 
 const Home = () => {
   const [data, setData] = useState('');
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const req = await getAllPins();
-      setData(req.data);
+      try {
+        const req = await getAllPins();
+        setData(req.data);
+      } catch (error) {
+        console.log('failed', error)
+      }
     }
     fetchPosts();
   }, []);

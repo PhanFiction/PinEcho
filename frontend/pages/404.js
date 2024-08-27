@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { fetchCredentials } from '../utils/auth';
+import { fetchCredentials } from '../src/utils/auth';
 
 export default function Custom404() {
   useEffect(() => {

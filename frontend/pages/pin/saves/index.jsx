@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Layout from "../../../components/Layout";
-import ImageGrid from "../../../components/ImageGrid/ImageGrid";
-import { getSavedPins } from "../../../service/pinService";
-import withAuth from "../../../hocs/withAuth"
+import Layout from "../../../src/components/Layout";
+import ImageGrid from "../../../src/components/ImageGrid/ImageGrid";
+import { getSavedPins } from "../../../src/service/pinService";
+import withAuth from "../../../src/hocs/withAuth"
 
 const Saves = () => {
   const [savedPins, setSavedPins] = useState([]);

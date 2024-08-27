@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import PinEcho from "../../components/PinEcho/PinEcho";
+import PinEcho from "../../src/components/PinEcho/PinEcho";
 import { useParams, useRouter } from 'next/navigation';
-import { getSinglePin, savePin, updateCommentLike, updatePinLike, createComment } from "../../service/pinService";
-import { getUser } from "../../service/authService";
-import { findItem } from "../../utils/auth";
-import Alert from '../../components/Alert/Alert';
-import { deletePin } from "../../service/pinService";
-import Layout from "../../components/Layout";
-import withAuth from "../../hocs/withAuth";
+import { getSinglePin, savePin, updateCommentLike, updatePinLike, createComment } from "../../src/service/pinService";
+import { getUser } from "../../src/service/authService";
+import { findItem } from "../../src/utils/auth";
+import Alert from '../../src/components/Alert/Alert';
+import { deletePin } from "../../src/service/pinService";
+import Layout from "../../src/components/Layout";
+import withAuth from "../../src/hocs/withAuth";
 
 const PinEchoPage = () => {
   const params = useParams();
