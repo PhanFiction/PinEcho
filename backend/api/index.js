@@ -25,7 +25,10 @@ mongoose.connect(config.databaseURL)
   
 app.use(express.json());
 
-app.use('/', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/pins', pinRoutes);
+app.get('/', (req, res) => {
+  res.send('PinEcho API');
+});
 
 module.exports = app;
