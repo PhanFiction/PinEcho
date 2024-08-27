@@ -9,7 +9,7 @@ const { deleteImg, uploadImg } = require('../utils/cloudinaryService');
 exports.getAllPins = async (req, res) => {
   try {
     const pins = await Pin.find({}).populate({path: 'comments creator', select: 'username profileImage'});
-    res.status(200).send({ data: pins});
+    res.status(200).json({ data: pins});
   } catch(error) {
     // Send a 500 Internal Server Error response with a generic error message
     res.status(500).send({ error: 'Internal Server Error' });
