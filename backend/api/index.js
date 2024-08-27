@@ -1,12 +1,11 @@
 const express = require('express');
 const app = express();
-const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const config = require('./config/config');
-const authRoutes = require('./routes/authRoutes');
-const pinRoutes = require('./routes/pinRoutes');
+const config = require('../config/config');
+const authRoutes = require('../routes/authRoutes');
+const pinRoutes = require('../routes/pinRoutes');
 const mongoose = require('mongoose');
 
 app.use(cookieParser());

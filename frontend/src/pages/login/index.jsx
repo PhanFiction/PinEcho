@@ -3,12 +3,12 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import bgSignup from '../../src/assets/images/bg_signup.png';
-import Label from "../../src/components/Label/Label";
-import ActionButton from "../../src/components/ActionButton/ActionButton";
-import { loginService } from '../../src/service/authService';
-import Alert from '../../src/components/Alert/Alert';
-import withoutAuth from '../../src/hocs/withoutAuth';
-import { useAuth } from '../../src/providers/Auth';
+import Label from "../../components/Label/Label";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import { loginService } from '../../service/authService';
+import Alert from '../../components/Alert/Alert';
+import withoutAuth from '../../hocs/withoutAuth';
+import { useAuth } from '../../providers/Auth';
 
 const Login = () => {;
   const [username, setUsername] = useState("");

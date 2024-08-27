@@ -8,8 +8,7 @@
     "test": "cross-env NODE_ENV=test nodemon index.js",
     "insert_data": "cross-env NODE_ENV=test node ./utils/fakeData.js",
     "unit_test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
-    "single_unit_test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit -t",
-    "build": "npm run build"
+    "single_unit_test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit -t"
   },
   "keywords": [],
   "author": "",

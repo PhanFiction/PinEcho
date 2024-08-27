@@ -2,7 +2,7 @@ require('dotenv').config();
 const cloudinaryService = require('cloudinary').v2;
 
 const { PORT, SECRET_KEY, NODE_ENV, MONGODB, MONGODB_TEST, CLOUD_NAME, CLOUD_API_KEY, CLOUD_API_SECRET } = process.env;
-const databaseURL = NODE_ENV === 'dev' ? MONGODB : MONGODB_TEST;
+const databaseURL = NODE_ENV === 'test' ? MONGODB_TEST : MONGODB;
 
 cloudinaryService.config({ 
   cloud_name: CLOUD_NAME, 
