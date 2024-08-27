@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const pinController = require('../controller/pinController');
 
-router.get('/pins', pinController.getAllPins);
+router.get('/', pinController.getAllPins);
 router.get('/saves', pinController.getSaves);
 router.get('/:id', pinController.getSinglePin);
 router.post('/create-new-pin', pinController.createPin);
