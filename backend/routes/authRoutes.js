@@ -7,7 +7,6 @@ router.post('/login', validateServices.validateLoginCredentials, authController.
 router.post('/signup', validateServices.validateSignUpCredentials, authController.signUp);
 router.put('/user', userController.updateUserInfo);
 router.get('/user', userController.getUser);
-router.get('/users', userController.getUsers);
 router.get('/logout', authController.logout);
 router.get('/authentication', authController.checkAuthenticatiion);
 

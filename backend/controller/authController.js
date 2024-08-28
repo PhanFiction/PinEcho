@@ -19,7 +19,7 @@ exports.login = async (req, res) => {
   const passwordCorrect = (foundUser) === null ? false : await bcrypt.compare(password, foundUser.passwordHash); 
 
   // if user not found, return error of 401 
-  if(!(foundUser && passwordCorrect)) return res.status(401).send({error: "incorrect information"});
+  if(!(foundUser && passwordCorrect)) return res.status(401).json({error: "incorrect information"});
 
   const userForToken = {
     username: foundUser.username,
@@ -40,9 +40,9 @@ exports.login = async (req, res) => {
     res
       .cookie('authToken', token, {maxAge: oneDay}, { httpOnly: true })
       .status(201)
-      .send({success: 'logged in successfully', redirectURL: '/', user});
+      .json({success: 'logged in successfully', redirectURL: '/', user});
   }catch(error){
-    res.send({'error': error})
+    res.json({'error': error})
   }
 };
 
@@ -72,22 +72,21 @@ exports.signUp = async (req, res) => {
     await user.save();
     res
       .status(201)
-      .send({success: 'created account successfully', redirectURL: '/login'});
+      .json({success: 'created account successfully', redirectURL: '/login'});
   }catch(error){
-      res.status(401).send(error);
+      res.status(401).json(error);
   };
 };
 
 exports.logout = async (req, res) => {
   res.clearCookie('authToken');
-  res.clearCookie('userToken');
-  res.send({success: 'successly logged out', redirectURL: '/'});
+  res.json({success: 'successly logged out', redirectURL: '/'});
 };
 
 exports.checkAuthenticatiion = async (req, res) => {
   if (req.headers.cookie && req.headers.cookie.includes('authToken')) {
-    res.status(200).send({message: "Authorized"});
+    res.status(200).json({message: "Authorized"});
   } else {
-    res.status(401).send({message: "Not Authorized"});
+    res.status(401).json({message: "Not Authorized"});
   }
 }
