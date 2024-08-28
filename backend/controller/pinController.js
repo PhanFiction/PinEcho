@@ -29,7 +29,7 @@ exports.getSinglePin = async (req, res) => {
       return res.status(404).send({ error: 'Pin not found' });
     }
 
-    res.status(200).send(foundPin);
+    res.status(200).json(foundPin);
   } catch (error) {
     // Send a 500 Internal Server Error response with a generic error message
     res.status(500).send({ error: 'Internal Server Error' });
@@ -38,7 +38,6 @@ exports.getSinglePin = async (req, res) => {
 
 // store to cloudinary and return path
 exports.createPin = async (req, res) => {
-  const { image, title, description, altText, link } = req.body;
   try {
     const { image, title, description, altText, link } = req.body;
     const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
@@ -73,7 +72,7 @@ exports.createPin = async (req, res) => {
     const pinStringId = convertIdToString(savedPin._id);
     foundUser.posts.push(pinStringId);
     await foundUser.save();
-    res.status(201).send({success: 'pin created', pinId: pinStringId});
+    res.status(201).json({success: 'pin created', pinId: pinStringId});
   } catch (error) {
     res.status(500).send({ error: 'Internal Server Error' });
   }
@@ -101,7 +100,7 @@ exports.updatePin = async (req, res) => {
     foundPin.category = category.length < 1 ? foundPin.category : category;
 
     await foundPin.save();
-    res.status(200).send({success: 'Pin has been updated'});
+    res.status(200).json({success: 'Pin has been updated'});
   }catch(error){
     res.status(401).send({error});
   }
@@ -132,7 +131,7 @@ exports.deletePin = async (req, res) => {
     foundUser.posts = foundUser.posts.filter((postId) => postId !== pinId);
     await foundUser.save();
 
-    res.status(200).send({ success: 'Pin and associated comments deleted' });
+    res.status(200).json({ success: 'Pin and associated comments deleted' });
   } catch (error) {
     res.status(400).send({ error });
   }
@@ -148,7 +147,7 @@ exports.getSaves = async (req, res) => {
     if(!decodedToken) return res.status(401).send({error: 'Not authorized'});
     if(decodedToken.id !== foundUser.id) return res.status(401).send({error: 'Not authorized'});
     if(!foundUser) return res.status(401).send({error: 'User does not exist'});
-    res.status(201).send(foundUser);
+    res.status(201).json(foundUser);
   } catch(error) {
     res.status(401).send({error});
   }
@@ -185,7 +184,7 @@ exports.updatePinSaves = async (req, res) => {
     const savedUser = await foundUser.save();
 
     // Return the updated user object
-    res.status(201).send(savedUser);
+    res.status(201).json(savedUser);
   } catch (error) {
     console.error('Error updating saves:', error);
     res.status(500).send({ error: 'Internal Server Error' });
@@ -215,7 +214,7 @@ exports.updatePinLike = async (req, res) => {
     }
     await foundPin.save();
     await foundUser.save();
-    res.status(201).send({'successfully updated likes': foundPin.pinLikes})
+    res.status(201).json({'successfully updated likes': foundPin.pinLikes})
   }catch(error){
     res.status(401).send({error});
   }
@@ -259,7 +258,7 @@ exports.createComment = async (req, res) => {
     // save the newly added id to database
     await foundUser.save();
     await foundPin.save();
-    res.status(201).send({ comment });
+    res.status(201).json({ comment });
   }catch(error){
     res.status(401).send({error});
   }
@@ -278,7 +277,7 @@ exports.updateComment = async (req, res) => {
   try{
     foundComment.comment = comment;
     await foundComment.save();
-    res.status(201).send({'success': 'updated comment'});
+    res.status(201).json({'success': 'updated comment'});
   }catch(error){
     res.status(401).send({error});
   }
@@ -311,7 +310,7 @@ exports.updateCommentLike = async (req, res) => {
     await foundComment.save();
     await foundUser.save();
 
-    res.status(201).send({success: 'successfully updated likes'});
+    res.status(201).json({success: 'successfully updated likes'});
   }catch(error){
     res.status(401).send({error});
   }
@@ -334,7 +333,7 @@ exports.deleteComment = async (req, res) => {
     await foundPin.save();
     await foundUser.save();
     await Comment.findByIdAndDelete(commentId);
-    res.status(201).send({'success': 'comment deleted'});
+    res.status(201).json({'success': 'comment deleted'});
   }catch(error){
     res.status(401).send({error});
   }
