@@ -8,7 +8,7 @@ const { deleteImg, uploadImg } = require('../utils/cloudinaryService');
 // returns all pins
 exports.getAllPins = async (req, res) => {
   try {
-    const pins = await Pin.find({}).populate({path: 'comments creator', select: 'username profileImage'});
+    const pins = await Pin.find({}).populate({ path: 'comments creator', select: 'username profileImage' });
     res.status(200).json({ data: pins});
   } catch(error) {
     // Send a 500 Internal Server Error response with a generic error message
@@ -43,12 +43,12 @@ exports.createPin = async (req, res) => {
     const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
     const decodedToken = verifyToken(cookie);
 
-    if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
+    if(!decodedToken) return res.status(401).json({ error: 'Not authorized' });
 
     const foundUser = await User.findById(decodedToken.id);
   
-    if(image === "") return res.status(400).json({error: "missing image"});
-    if(!foundUser) return res.status(401).json({error: 'User not found'});
+    if(image === "") return res.status(400).json({ error: "missing image" });
+    if(!foundUser) return res.status(401).json({ error: 'User not found' });
   
     // store to cloudinary
     const result = await uploadImg(image, 'posts');;
@@ -72,7 +72,7 @@ exports.createPin = async (req, res) => {
     const pinStringId = convertIdToString(savedPin._id);
     foundUser.posts.push(pinStringId);
     await foundUser.save();
-    res.status(201).json({success: 'pin created', pinId: pinStringId});
+    res.status(201).json({ success: 'pin created', pinId: pinStringId });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
