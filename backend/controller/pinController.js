@@ -16,7 +16,7 @@ exports.getAllPins = async (req, res) => {
   }
 };
 
-// return a single pin
+// Return a single pin
 exports.getSinglePin = async (req, res) => {
   try {
     const pinId = req.params.id;
@@ -36,7 +36,7 @@ exports.getSinglePin = async (req, res) => {
   }
 };
 
-// store to cloudinary and return path
+// Store to cloudinary and return path
 exports.createPin = async (req, res) => {
   try {
     const { image, title, description, altText, link } = req.body;
@@ -78,19 +78,19 @@ exports.createPin = async (req, res) => {
   }
 };
 
-// update the pin
+// Update the pin
 exports.updatePin = async (req, res) => {
   const { title, description, altText, link, category } = req.body;
   const pinId = req.params.id;
   const foundPin = await Pin.findById(pinId);
 
-  if(!foundPin) return res.status(401).json({'Pin error': 'Pin not found'});
+  if(!foundPin) return res.status(401).json({ 'Pin error': 'Pin not found' });
 
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
   const decodedToken = verifyToken(cookie);
 
-  if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-  if(foundPin.creator != decodedToken.id) return res.status(401).json({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).json({ error: 'Not authorized' });
+  if(foundPin.creator != decodedToken.id) return res.status(401).json({ error: 'Not authorized' });
 
   try{
     foundPin.title = title === '' ? foundPin.title : title;
@@ -100,12 +100,13 @@ exports.updatePin = async (req, res) => {
     foundPin.category = category.length < 1 ? foundPin.category : category;
 
     await foundPin.save();
-    res.status(200).json({success: 'Pin has been updated'});
+    res.status(200).json({ success: 'Pin has been updated' });
   }catch(error){
-    res.status(401).json({error});
+    res.status(401).json({ error });
   }
 };
 
+// Deletes the pin and the associated comments 
 exports.deletePin = async (req, res) => {
   try {
     const pinId = req.params.id;
@@ -137,6 +138,7 @@ exports.deletePin = async (req, res) => {
   }
 };
 
+// Get all the saves of a user
 exports.getSaves = async (req, res) => {
   try {
     const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
@@ -145,14 +147,15 @@ exports.getSaves = async (req, res) => {
       .populate({path: 'saves', populate: { path: 'creator', select: 'username creator profileImage -_id'}});
 
     if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-    if(decodedToken.id !== foundUser.id) return res.status(401).json({error: 'Not authorized'});
-    if(!foundUser) return res.status(401).json({error: 'User does not exist'});
+    if(decodedToken.id !== foundUser.id) return res.status(401).json({ error: 'Not authorized' });
+    if(!foundUser) return res.status(401).json({ error: 'User does not exist' });
     res.status(201).json(foundUser);
   } catch(error) {
-    res.status(401).json({error});
+    res.status(401).json({ error });
   }
 }
 
+// Update the pin save
 exports.updatePinSaves = async (req, res) => {
   try {
     const pinId = req.params.id;
@@ -191,7 +194,7 @@ exports.updatePinSaves = async (req, res) => {
   }
 };
 
-// Todo: Test code and see if the likes is getting updated
+// Updates the pink likes
 exports.updatePinLike = async (req, res) => {
   try {
     const pinId = req.params.id;
@@ -201,9 +204,9 @@ exports.updatePinLike = async (req, res) => {
     const foundPin = await Pin.findById(pinId);
     const foundUser = await User.findById(decodedToken.id);
 
-    if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-    if(!foundPin) return res.status(401).json({error: 'Pin is not available'});
-    if(!foundUser) return res.status(401).json({error: 'User not found'});
+    if(!decodedToken) return res.status(401).json( {error: 'Not authorized' });
+    if(!foundPin) return res.status(401).json({ error: 'Pin is not available' });
+    if(!foundUser) return res.status(401).json({ error: 'User not found' });
 
     if(foundPin.likes.includes(decodedToken.id) === true) {
       foundUser.pinLikes.map(id => id.toString() !== pinId.toString());
@@ -214,12 +217,13 @@ exports.updatePinLike = async (req, res) => {
     }
     await foundPin.save();
     await foundUser.save();
-    res.status(201).json({'successfully updated likes': foundPin.pinLikes})
+    res.status(201).json({ 'successfully updated likes': foundPin.pinLikes });
   }catch(error){
     res.status(401).json({error});
   }
 };
 
+// Create a comment
 exports.createComment = async (req, res) => {
   const pinId = req.params.id;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
@@ -229,9 +233,9 @@ exports.createComment = async (req, res) => {
   const foundPin = await Pin.findById(pinId);
   const foundUser = await User.findById(decodedToken.id);
 
-  if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-  if(!foundPin) return res.status(401).json({error: 'Pin is not available'}); 
-  if(!foundUser) return res.status(401).json({error: 'User not found'});
+  if(!decodedToken) return res.status(401).json({ error: 'Not authorized' });
+  if(!foundPin) return res.status(401).json({ error: 'Pin is not available' }); 
+  if(!foundUser) return res.status(401).json({ error: 'User not found' });
 
   const newComment = {
     creator: decodedToken.id,
@@ -260,10 +264,11 @@ exports.createComment = async (req, res) => {
     await foundPin.save();
     res.status(201).json({ comment });
   }catch(error){
-    res.status(401).json({error});
+    res.status(401).json({ error });
   }
 };
 
+// Update the comment
 exports.updateComment = async (req, res) => {
   const { comment, commentId } = req.body;
   const foundComment = await Comment.findById(commentId);
@@ -271,19 +276,19 @@ exports.updateComment = async (req, res) => {
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1]; // split and return cookie
   const decodedToken = verifyToken(cookie);
 
-  if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-  if(decodedToken.id !== foundComment.creator.id) return res.status(401).json({error: 'Not authorized'});
+  if(!decodedToken) return res.status(401).json({ error: 'Not authorized' });
+  if(decodedToken.id !== foundComment.creator.id) return res.status(401).json({ error: 'Not authorized' });
 
   try{
     foundComment.comment = comment;
     await foundComment.save();
-    res.status(201).json({'success': 'updated comment'});
+    res.status(201).json({ 'success': 'updated comment' });
   }catch(error){
-    res.status(401).json({error});
+    res.status(401).json({ error });
   }
 };
 
-// Todo: Test code and see if the likes is getting updated
+// Update the comment likes
 exports.updateCommentLike = async (req, res) => {  
   try {
     const commentId = req.params.id;
@@ -295,8 +300,8 @@ exports.updateCommentLike = async (req, res) => {
     const foundComment = await Comment.findById(commentId);
     const foundUser = await User.findById(decodedToken.id);
 
-    if(!foundComment) return res.status(401).json({error: 'Comment is not available'});  
-    if(!foundUser) return res.status(401).json({error: 'User not found'});
+    if(!foundComment) return res.status(401).json({ error: 'Comment is not available' });  
+    if(!foundUser) return res.status(401).json({ error: 'User not found' });
 
     if (foundComment.likes.includes(decodedToken.id)) {
       // If the user already liked the comment, remove the like
@@ -310,12 +315,13 @@ exports.updateCommentLike = async (req, res) => {
     await foundComment.save();
     await foundUser.save();
 
-    res.status(201).json({success: 'successfully updated likes'});
+    res.status(201).json({ success: 'successfully updated likes' });
   }catch(error){
-    res.status(401).json({error});
+    res.status(401).json({ error });
   }
 };
 
+// Delete the comment
 exports.deleteComment = async (req, res) => {
   const commentId = req.params.id;
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
@@ -323,9 +329,9 @@ exports.deleteComment = async (req, res) => {
   const foundComment = await Comment.findById(commentId);
   const foundPin = await Pin.findById(foundComment.pin.id);
 
-  if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-  if(decodedToken.id !== foundComment.creator.id) return res.status(401).json({error: 'Not authorized'});
-  if(!foundPin) return res.status(401).json({error: 'Pin not found'});
+  if(!decodedToken) return res.status(401).json({ error: 'Not authorized' });
+  if(decodedToken.id !== foundComment.creator.id) return res.status(401).json({ error: 'Not authorized' });
+  if(!foundPin) return res.status(401).json({ error: 'Pin not found' });
   try{
     foundPin.comments = foundPin.comments.map(item => item !== commentId);
     foundUser.comments = foundUser.comments.map(item => item !== commentId);
@@ -333,8 +339,8 @@ exports.deleteComment = async (req, res) => {
     await foundPin.save();
     await foundUser.save();
     await Comment.findByIdAndDelete(commentId);
-    res.status(201).json({'success': 'comment deleted'});
+    res.status(201).json({ 'success': 'comment deleted' });
   }catch(error){
-    res.status(401).json({error});
+    res.status(401).json({ error });
   }
 };
