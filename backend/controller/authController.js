@@ -38,11 +38,11 @@ exports.login = async (req, res) => {
     const token = jwt.sign(userForToken, config.SECRET_KEY);
     
     res
-      .cookie('authToken', token, {maxAge: oneDay}, { httpOnly: true })
+      .cookie('authToken', token, {maxAge: oneDay, httpOnly: true })
       .status(201)
       .json({success: 'logged in successfully', redirectURL: '/', user});
   }catch(error){
-    res.json({'error': error})
+    res.json({'error': "failed to login"});
   }
 };
 
