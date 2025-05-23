@@ -18,8 +18,8 @@ const corsOptions = {
 // set core options
 app.use(cors(corsOptions));
 
-app.use(bodyParser.json({limit:'50mb'})); // set limit to 50mb for body 
-app.use(bodyParser.urlencoded({extended:true, limit:'50mb'})); 
+app.use(bodyParser.json({ limit:'50mb' })); // set limit to 50mb for body 
+app.use(bodyParser.urlencoded({ extended:true, limit:'50mb' })); 
 
 // connect to database
 mongoose.connect(config.databaseURL)
