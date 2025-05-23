@@ -1,7 +1,7 @@
 // Extract token from the request and verify it
 const verifyToken = require('../utils/verifyToken');
 
-module.extractToken = (req, res, next) => {
+exports.extractToken = (req, res, next) => {
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
   const decodedToken = verifyToken(cookie);
   
