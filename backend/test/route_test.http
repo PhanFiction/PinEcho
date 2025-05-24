@@ -1,0 +1,31 @@
+GET http://localhost:4200/pins
+
+###
+
+GET http://localhost:4200/pins/66cd93e2cc0977fb7675bd99
+
+### 
+POST http://localhost:4200/auth/signup
+Content-Type: application/json
+
+{
+  "username": "tester2",
+  "firstName": "tester2",
+  "lastName": "tester2",
+  "email": "tester2@gmail.com",
+  "password": "123456"
+}
+
+###
+
+POST http://localhost:4200/auth/login
+Content-Type: application/json
+
+{
+  "username": "tester2",
+  "password": "123456"
+}
+
+###
+
+Cookie: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RlcjIiLCJpZCI6IjY4MzAwODdhZTdlNDdlMWQ0NWJhNmFiZiIsImlhdCI6MTc0Nzk4MTM5OH0.MQ0Ibmn96y-80uPDXG92NTh6pdO-JaFRc_UJHsomLyQ; Max-Age=86400; Path=/; Expires=Sat, 24 May 2025 06:23:18 GMT; HttpOnly

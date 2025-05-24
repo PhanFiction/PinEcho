@@ -33,23 +33,25 @@ exports.updateUserInfo = async (req, res) => {
     const saltRounds = 10;
     let passwordHash = null;
     
-    if(!req.headers.cookie) return res.json({error: 'Not authorized'});
+    if (!req.headers.cookie) return res.json({error: 'Not authorized'});
     
     const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
     const decodedToken = verifyToken(cookie);
+
     if(!decodedToken) return res.json({error: 'Not authorized'});
 
     const foundUser = await User.findById(decodedToken.id);
-    if(!foundUser) return res.status(401).json({error: 'user not found'});
+    
+    if (!foundUser) return res.status(401).json({error: 'user not found'});
 
-    if(password.length > passwordMin && newPassword.length > passwordMin) {
+    if (password.length > passwordMin && newPassword.length > passwordMin) {
       const correctPassword = await bcrypt.compare(password, foundUser.passwordHash);
 
       if(!correctPassword) return res.status(401).json("Unauthorized: Incorrect password");
 
       if(password !== newPassword) passwordHash = await bcrypt.hash(newPassword, saltRounds);
       else passwordHash = foundUser.passwordHash;
-    }else{
+    } else {
       return res.status(401).json("Unauthorized: Incorrect password");
     }
 
@@ -57,6 +59,7 @@ exports.updateUserInfo = async (req, res) => {
     if(profileImage && foundUser.imgPath) {
       await deleteImg(foundUser.imgPath.publicId, 'profile');
     }
+
     imgResult = await uploadImg(profileImage, 'profile');
 
     const updatedUserInfo = {
