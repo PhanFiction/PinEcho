@@ -1,22 +1,13 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const config = require('../config/config');
 const { uploadImg, deleteImg } = require('../utils/cloudinaryService');
 const verifyToken = require('../utils/verifyToken');
-
-// returns all users from database
-exports.getUsers = async (req, res) => {
-  const foundUsers = await User.find({});
-  res.status(201).json(foundUsers);
-};
 
 // return user from database
 exports.getUser = async (req, res) => {
   try{
-    const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
-    const decodedToken = verifyToken(cookie);
-    if(!decodedToken) return res.status(401).json({error: 'Not authorized'});
-    const foundUser = await User.findById(decodedToken.id).select('-passwordHash -v');
+    const userId = req.userId;
+    const foundUser = await User.findById(userId).select('-passwordHash -v');
     res.status(200).json(foundUser);
   }catch(error){
     res.status(400).json({error});
@@ -27,20 +18,14 @@ exports.getUser = async (req, res) => {
 exports.updateUserInfo = async (req, res) => {
   try {
     const { username, email, firstName, lastName, password, newPassword, profileImage } = req.body;
+    const userId = req.userId;
     const passwordMin = 4;
 
     let imgResult = '';
     const saltRounds = 10;
     let passwordHash = null;
-    
-    if (!req.headers.cookie) return res.json({error: 'Not authorized'});
-    
-    const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
-    const decodedToken = verifyToken(cookie);
 
-    if(!decodedToken) return res.json({error: 'Not authorized'});
-
-    const foundUser = await User.findById(decodedToken.id);
+    const foundUser = await User.findById(userId);
     
     if (!foundUser) return res.status(401).json({error: 'user not found'});
 
