@@ -9,13 +9,21 @@ This projects allows users to create their profiles, share photos, as well as sa
 - Like other users photos
 - Comment on peoples shared photos
 
+## Future plan
+
+- [] Direct Messaging using websockets
+- [] Tag/mention other users
+- [] Notifications
+- [] Sign in with OAuth
+- [] Filter photos by category
+
 ## Technology
 
- - Cloudinary API, 
- - React, 
- - ExpressJS, 
- - MongoDB, 
- - TailwindCSS
+- Cloudinary API, 
+- React, 
+- ExpressJS, 
+- MongoDB, 
+- TailwindCSS
 
 ### Installation
 1. Clone this repository
