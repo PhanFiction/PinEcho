@@ -11,11 +11,11 @@ This projects allows users to create their profiles, share photos, as well as sa
 
 ## Future plan
 
-- [] Direct Messaging using websockets
-- [] Tag/mention other users
-- [] Notifications
-- [] Sign in with OAuth
-- [] Filter photos by category
+- [ ] Direct Messaging using websockets
+- [ ] Tag/mention other users
+- [ ] Notifications
+- [ ] Sign in with OAuth
+- [ ] Filter photos by category
 
 ## Technology
 
