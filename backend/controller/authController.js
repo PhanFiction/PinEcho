@@ -83,7 +83,7 @@ exports.logout = async (req, res) => {
   res.json({success: 'successly logged out', redirectURL: '/'});
 };
 
-exports.checkAuthenticatiion = async (req, res) => {
+exports.checkAuthentication = async (req, res) => {
   if (req.headers.cookie && req.headers.cookie.includes('authToken')) {
     res.status(200).json({message: "Authorized"});
   } else {
