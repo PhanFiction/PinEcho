@@ -4,12 +4,15 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
+// Login a user
 exports.login = async (req, res) => {
   const errors = validationResult(req);
+  // Check if there are validation errors
+  // If there are, return a 401 status with the error messages
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map(error => error.msg);
     return res.status(401).json({
-        errors: errorMessages
+      errors: errorMessages
     });
   };
 
@@ -46,6 +49,7 @@ exports.login = async (req, res) => {
   }
 };
 
+// Sign up a new user
 exports.signUp = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -78,11 +82,13 @@ exports.signUp = async (req, res) => {
   };
 };
 
+// Logout a user
 exports.logout = async (req, res) => {
   res.clearCookie('authToken');
   res.json({success: 'successly logged out', redirectURL: '/'});
 };
 
+// Check if user is authenticated
 exports.checkAuthentication = async (req, res) => {
   if (req.headers.cookie && req.headers.cookie.includes('authToken')) {
     res.status(200).json({message: "Authorized"});
